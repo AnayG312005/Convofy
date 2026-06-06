@@ -1,33 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jansevak</title>
+    <title>Convofy — Prescribe Medicine</title>
     <link rel="icon" href="./static/images/heart-pulse-solid.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./static/css/style.css">
-
+    <style>
+        .prescribe-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .prescribe-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 4rem;
+            width: 100%;
+            max-width: 60rem;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.4);
+        }
+        .prescribe-card h2 {
+            color: #fff;
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        .prescribe-card .patient-name {
+            color: var(--green);
+            font-size: 2.2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-transform: none;
+        }
+        .medicine-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding: 1.2rem 1.5rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            transition: all 0.2s ease;
+        }
+        .medicine-item:hover {
+            border-color: rgba(0,201,167,0.3);
+            background: rgba(0,201,167,0.04);
+        }
+        .medicine-item input[type="checkbox"] {
+            width: 1.8rem;
+            height: 1.8rem;
+            accent-color: var(--green);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .medicine-item label {
+            color: #fff;
+            font-size: 1.5rem;
+            cursor: pointer;
+            flex: 1;
+            text-transform: none;
+            margin: 0;
+        }
+        .submit-btn {
+            width: 100%;
+            margin-top: 2rem;
+            padding: 1.3rem;
+            background: var(--green);
+            color: #fff;
+            border-radius: 10px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 2px solid var(--green);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+        }
+        .submit-btn:hover {
+            background: transparent;
+            color: var(--green);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,201,167,0.3);
+        }
+        .section-label {
+            color: var(--light-color);
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--light-color);
+            font-size: 1.4rem;
+            margin-bottom: 2rem;
+            text-transform: none;
+        }
+        .back-link:hover { color: var(--green); }
+    </style>
 </head>
-
 <body>
-    <h2>Prescribe Medicine for {{ appointment.name }}</h2>
-    <form method="post">
-        <div class="form-group">
-            <label>Select Medicines:</label>
-            {% for medicine in available_medicines %}
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="medicines[]" value="{{ medicine }}">
-                <label class="form-check-label">{{ medicine }}</label>
-            </div>
-            {% endfor %}
+    <div class="prescribe-page">
+        <div class="prescribe-card">
+            <a href="{{url_for('doctor_patients')}}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Patients</a>
+            <h2><i class="fas fa-pills" style="color: var(--green);"></i> Prescribe Medicine</h2>
+            <p class="patient-name">Patient: {{ appointment.name }}</p>
+
+            <form method="post">
+                <p class="section-label">Select Medicines to Prescribe:</p>
+                {% for medicine in available_medicines %}
+                <div class="medicine-item">
+                    <input type="checkbox" id="med_{{loop.index}}" name="medicines[]" value="{{ medicine }}">
+                    <label for="med_{{loop.index}}">{{ medicine }}</label>
+                </div>
+                {% endfor %}
+
+                <button type="submit" class="submit-btn"><i class="fas fa-check"></i> Submit Prescription</button>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Submit Prescription</button>
-    </form>
+    </div>
 
+    <footer class="footer">
+        <div class="footer-bottom" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 2rem;">
+            <p>&copy; 2024 Convofy. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="{{url_for('policy')}}">Privacy Policy</a>
+                <a href="{{url_for('policy')}}">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="./static/js/script.js"></script>
 </body>
-
 </html>

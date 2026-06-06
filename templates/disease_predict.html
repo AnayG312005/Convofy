@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jansevak</title>
+    <meta name="description" content="Convofy AI Disease Predictor — Predict diseases based on your symptoms using machine learning.">
+    <title>Convofy — Disease Predictor</title>
     <link rel="icon" href="./static/images/heart-pulse-solid.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
@@ -12,189 +12,176 @@
     <link rel="stylesheet" href="./static/css/style.css">
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-        label {
-            color: white;
-            font-size: 1.3rem;
+        label { color: var(--light-color); font-size: 1.3rem; display: block; margin-bottom: 0.3rem; margin-top: 1rem; text-transform: none; }
+        #plot { width: 100%; margin: auto; }
+        .result-card {
+            background: rgba(0,201,167,0.06);
+            border: 1px solid rgba(0,201,167,0.2);
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: left;
         }
-
-        p {
-            color: white;
-            font-size: 2.0rem;
+        .result-card p {
+            color: var(--black);
+            font-size: 1.8rem;
+            font-weight: 500;
+            text-transform: none;
+            line-height: 2;
         }
-
-        #plot {
-            width: 100%;
-            margin: auto;
-        }
+        .result-card p span { color: var(--green); font-weight: 700; }
     </style>
 </head>
-
 <body>
     <header class="header">
-        <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> jansevak</a>
+        <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
         <nav class="navbar">
             {% if username %}
             <a href="{{url_for('index')}}#home">Home</a>
-            <a href="{{url_for('index')}}#services">services</a>
+            <a href="{{url_for('index')}}#services">Services</a>
             <a href="{{url_for('index')}}#book">Book</a>
             <a href="{{url_for('index')}}#scans">Scans</a>
             <a href="{{url_for('index')}}#blogs">Blogs</a>
-            <a href="{{url_for('index')}}#about">about</a>
+            <a href="{{url_for('index')}}#about">About</a>
             <a href="{{url_for('profile')}}"><span class="fas fa-user"></span></a>
             {% else %}
             <a href="{{url_for('login')}}">Login</a>
             {% endif %}
         </nav>
-
         <div id="menu-btn" class="fas fa-bars"></div>
-
     </header>
+
     {% if disease %}
     <section class="book" id="book">
-        <h1 class="heading" style="margin-top: 8rem;"> <span>Disease </span>Prediction Result</h1>
-        <div class="glass-row" style="margin-top:80px; justify-content: space-between;">
-            <p>Predicted Disease: {{ disease }}</p>
-            <p>Confidence Score: {{ confidence_score }}%</p>
+        <h1 class="heading" style="margin-top: 8rem;"><span>Prediction</span> Result</h1>
+        <div class="glass-row" style="margin-top: 60px;">
+            <a href="{{url_for('index')}}" class="logo" style="display: block; text-align: center; margin-bottom: 2rem;"><i class="fas fa-heartbeat"></i> Convofy</a>
+            <div class="result-card">
+                <p>Predicted Disease: <span>{{ disease }}</span></p>
+                <p>Confidence Score: <span>{{ confidence_score | round(2) }}%</span></p>
+            </div>
             <div id="plot"></div>
-
+            <a href="{{url_for('disease_predict')}}" class="btn" style="margin-top: 2rem;">Try Again <span class="fas fa-redo"></span></a>
+            <a href="{{url_for('book_appointment')}}" class="btn" style="margin-top: 2rem; margin-left: 1rem;">Book Appointment <span class="fas fa-chevron-right"></span></a>
         </div>
     </section>
 
     {% else %}
     <section class="book" id="book">
-        <h1 class="heading" style="margin-top: 8rem;"> <span>Disease</span> Predictor</h1>
-        <div class="glass-row" style="margin-top:40px;">
+        <h1 class="heading" style="margin-top: 8rem;"><span>Disease</span> Predictor</h1>
+        <div class="glass-row" style="margin-top: 40px;">
+            <a href="{{url_for('index')}}" class="logo" style="display: block; text-align: center; margin-bottom: 2rem;"><i class="fas fa-heartbeat"></i> Convofy</a>
+            <p style="color: var(--light-color); font-size: 1.4rem; text-align: center; margin-bottom: 2rem; text-transform: none;">Select up to 5 symptoms to predict possible diseases using our AI model.</p>
+
             <form action="{{ url_for('disease_predict') }}" name="SymptomForm" id="SymForm" method="POST">
-                <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Jansevak</a><br><br>
-                <label for="Symptom1">Symptom 1:</label>
-                <select required type="text" name="Symptom1">
-                    <datalist id="symp">
-                        {% for symp in symptoms %}
-                        <option value="{{symp}}">{{symp}}</option>
-                        {% endfor %}
-                    </datalist>
-                </select><br><br>
-                <label for="Symptom2">Symptom 2:</label>
-                <select type="text" name="Symptom2" required>
-                    <datalist id="symp">
-                        {% for symp in symptoms %}
-                        <option value="{{symp}}">{{symp}}</option>
-                        {% endfor %}
-                    </datalist>
-                </select><br><br>
-                <label for="Symptom3">Symptom 3:</label>
-                <select required type="text" name="Symptom3">
-                    <datalist id="symp">
-                        {% for symp in symptoms %}
-                        <option value="{{symp}}">{{symp}}</option>
-                        {% endfor %}
-                    </datalist>
-                </select><br><br>
-                <label for="Symptom4">Symptom 4:</label>
-                <select required type="text" name="Symptom4">
-                    <datalist id="symp">
-                        {% for symp in symptoms %}
-                        <option value="{{symp}}">{{symp}}</option>
-                        {% endfor %}
-                    </datalist>
-                </select><br><br>
-                <label for="Symptom5">Symptom 5:</label>
-                <select required type="text" name="Symptom5">
-                    <datalist id="symp">
-                        {% for symp in symptoms %}
-                        <option value="{{symp}}">{{symp}}</option>
-                        {% endfor %}
-                    </datalist>
-                </select><br><br>
-                <input type="submit" value="Predict" class="btn" name=form>
-                <p style="color: white; font-size: 1.3rem; margin-top: 2rem;">By continuing, you agree to Jansevak's <a
-                        style="color: #16a085;" href="{{url_for('policy')}}">Terms of Service</a> Opens a new tab and
-                    acknowledge you've read our Privacy
-                    Policy. Notice at collection.</p>
+                <label for="Symptom1">Symptom 1</label>
+                <select required name="Symptom1">
+                    {% for symp in symptoms %}
+                    <option value="{{symp}}">{{symp}}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="Symptom2">Symptom 2</label>
+                <select name="Symptom2" required>
+                    {% for symp in symptoms %}
+                    <option value="{{symp}}">{{symp}}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="Symptom3">Symptom 3</label>
+                <select required name="Symptom3">
+                    {% for symp in symptoms %}
+                    <option value="{{symp}}">{{symp}}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="Symptom4">Symptom 4</label>
+                <select required name="Symptom4">
+                    {% for symp in symptoms %}
+                    <option value="{{symp}}">{{symp}}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="Symptom5">Symptom 5</label>
+                <select required name="Symptom5">
+                    {% for symp in symptoms %}
+                    <option value="{{symp}}">{{symp}}</option>
+                    {% endfor %}
+                </select>
+                <br>
+
+                <input type="submit" value="Predict Disease" class="btn" name="form" style="width: 100%; margin-top: 1.5rem; padding: 1.2rem; font-size: 1.6rem; font-weight: 700; background: var(--green); color: #fff; border-radius: 10px; border: 2px solid var(--green); cursor: pointer;">
+
+                <p style="color: rgba(255,255,255,0.5); font-size: 1.2rem; margin-top: 1.5rem; text-transform: none; text-align: center;">
+                    By continuing, you agree to Convofy's <a style="color: var(--green);" href="{{url_for('policy')}}">Terms of Service</a> and Privacy Policy.
+                </p>
             </form>
         </div>
     </section>
     {% endif %}
-    <section class="footer">
-        <div class="box-container">
-            <div class="box">
-                <h3>quick links</h3>
-                <a href="{{url_for('index')}}#home"><i class="fas fa-chevron-right"></i> home</a>
-                <a href="{{url_for('index')}}#services"><i class="fas fa-chevron-right"></i> services</a>
-                <a href="{{url_for('index')}}#book"><i class="fas fa-chevron-right"></i>book</a>
-                <a href="{{url_for('index')}}#scans"><i class="fas fa-chevron-right"></i> scans</a>
-                <a href="{{url_for('index')}}#blogs"><i class="fas fa-chevron-right"></i> blogs</a>
-                <a href="{{url_for('index')}}#about"><i class="fas fa-chevron-right"></i> about</a>
 
-
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
+                <p>Your personalized AI-powered healthcare telemedicine platform, connecting patients with the best medical professionals worldwide.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                </div>
             </div>
-            <div class="box">
-                <h3>our services </h3>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-
-
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="{{url_for('index')}}#services">Services</a>
+                <a href="{{url_for('index')}}#scans">AI Scans</a>
+                <a href="{{url_for('book_appointment')}}">Book Appointment</a>
+                <a href="{{url_for('index')}}#blogs">Health Blogs</a>
             </div>
-            <div class="box">
-                <h3>contact info</h3>
-                <a href="" class="disabled"><i class="fas fa-phone"></i>+91 70441 35575</a>
-                <a href="" class="disabled"><i class="fas fa-phone"></i> +91 62916 53332</a>
-                <a href="mailto:21051302@kiit.ac.in"><i class="fas fa-envelope"></i>21051302@kiit.ac.in</a>
-                <a href="mailto:21051706@kiit.ac.in"><i class="fas fa-envelope"></i>21051706@kiit.ac.in</a>
-                <a href="" class="disabled"><i class="fas fa-map-marker-alt"></i>WB, INDIA</a>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="{{url_for('disease_predict')}}">Disease Predictor</a>
+                <a href="{{url_for('braintumor')}}">Brain Tumor Detection</a>
+                <a href="{{url_for('lung')}}">Lung Cancer Detection</a>
+                <a href="{{url_for('cataract')}}">Cataract Detection</a>
             </div>
-            <div class="box">
-                <h3>follow us</h3>
-                <a href="https://www.linkedin.com/in/abhishek-mallick09/"><i class="fab fa-linkedin"></i>linkedin</a>
-                <a href="https://www.linkedin.com/in/deepraj-bera-b64996231/"><i
-                        class="fab fa-linkedin"></i>linkedin</a>
-                <a href="https://github.com/Abhishek-Mallick"><i class="fab fa-github"></i>Github</a>
-                <a href="https://github.com/deepraj21"><i class="fab fa-github"></i>Github</a>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="{{url_for('index')}}#about">About Us</a>
+                <a href="{{url_for('policy')}}">Privacy Policy</a>
+                <a href="{{url_for('policy')}}">Terms of Service</a>
+                <a href="mailto:support@convofy.health">Contact Us</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <a href="mailto:support@convofy.health"><i class="fas fa-envelope"></i> support@convofy.health</a>
+                <a href="tel:+11234567890"><i class="fas fa-phone"></i> +1 (123) 456-7890</a>
+                <a href="#" class="disabled"><i class="fas fa-map-marker-alt"></i> San Francisco, CA</a>
             </div>
         </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Convofy. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="{{url_for('policy')}}">Privacy Policy</a>
+                <a href="{{url_for('policy')}}">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
 
-        <div class="credit">made with 💚 | Jansevak @ 2023</div>
-    </section>
     <script src="./static/js/script.js"></script>
     <script>
-        // JavaScript code to dynamically render the plot using Plotly.js
         var disease = '{{ chart_data.disease }}';
         var confidence_score = '{{ chart_data.confidence_score }}';
-
-        var data = [{
-            x: [disease],
-            y: [confidence_score],
-            type: 'bar'
-        }];
-
+        var data = [{ x: [disease], y: [confidence_score], type: 'bar', marker: { color: '#00c9a7' } }];
         var layout = {
-            title: 'Disease Prediction Confidence Score',
-            xaxis: {
-                title: 'Disease',
-                tickfont: {
-                    color: 'white'  // Set x-axis tick font color to white
-                }
-            },
-            yaxis: {
-                title: 'Confidence Score (%)',
-                tickfont: {
-                    color: 'white'  // Set y-axis tick font color to white
-                }
-            },
-            plot_bgcolor: 'rgba(0, 0, 0, 0)',
-            paper_bgcolor: 'rgba(0, 0, 0, 0)',
-            font: {
-                color: 'white'  // Set general font color to white
-            }
+            title: { text: 'Disease Prediction Confidence Score', font: { color: 'white', size: 16 } },
+            xaxis: { title: 'Disease', tickfont: { color: 'white' }, titlefont: { color: 'white' } },
+            yaxis: { title: 'Confidence Score (%)', tickfont: { color: 'white' }, titlefont: { color: 'white' } },
+            plot_bgcolor: 'rgba(0,0,0,0)', paper_bgcolor: 'rgba(0,0,0,0)',
+            font: { color: 'white' }
         };
-
         Plotly.newPlot('plot', data, layout);
     </script>
-
 </body>
-
 </html>

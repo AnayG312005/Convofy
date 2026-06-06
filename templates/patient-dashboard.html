@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jansevak</title>
+    <meta name="description" content="Convofy Patient Dashboard — Manage appointments, access AI health tools, and connect with doctors.">
+    <title>Convofy — Patient Dashboard</title>
     <link rel="icon" href="./static/images/heart-pulse-solid.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
@@ -14,69 +14,46 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
     <link rel="stylesheet" href="./static/css/style.css">
     <style>
-
-    .owl-dots {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .owl-dot {
-      height: 13px;
-      width: 13px;
-      margin: 0 5px;
-      outline: none !important;
-      border-radius: 50%;
-      border: 2px solid rgb(46, 77, 248) !important;
-      transition: all 0.3s ease;
-    }
-
-    .owl-dot.active {
-      width: 35px;
-      border-radius: 14px;
-    }
-
-    .owl-dot.active,
-    .owl-dot:hover {
-      background: rgb(46, 77, 248) !important;
-    }
-
+        .owl-dots { text-align: center; margin-top: 20px; }
+        .owl-dot {
+            height: 10px; width: 10px; margin: 0 5px;
+            outline: none !important; border-radius: 50%;
+            border: 2px solid var(--green) !important;
+            display: inline-block; transition: all 0.3s ease;
+        }
+        .owl-dot.active { width: 30px; border-radius: 12px; }
+        .owl-dot.active, .owl-dot:hover { background: var(--green) !important; }
     </style>
 </head>
-
 <body>
 
     <header class="header">
-        <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> jansevak</a>
+        <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
         <nav class="navbar">
             {% if username %}
             <a href="{{url_for('index')}}#home">Home</a>
-            <a href="{{url_for('index')}}#services">services</a>
+            <a href="{{url_for('index')}}#services">Services</a>
             <a href="{{url_for('index')}}#book">Book</a>
             <a href="{{url_for('index')}}#scans">Scans</a>
             <a href="{{url_for('index')}}#blogs">Blogs</a>
-            <a href="{{url_for('index')}}#about">about</a>
+            <a href="{{url_for('index')}}#about">About</a>
             <a href="{{url_for('profile')}}"><span class="fas fa-user"></span></a>
             {% else %}
             <a href="{{url_for('login')}}">Login</a>
             {% endif %}
         </nav>
-
         <div id="menu-btn" class="fas fa-bars"></div>
-
     </header>
 
     <section class="home" id="home">
         <div class="image">
             <img src="../static/images/doctors-animate.svg" alt="">
-
         </div>
         <div class="content">
-            <h3>Welcome to <span style="color: #16a085;">Jansevak</span> . <br> <span style="font-size: 4.0rem;">your
-                    Personalized Healthcare telemedicine assistant platform.</span></h3>
-            <!-- <h3>stay healthy</h3> -->
+            <h3>Welcome to <span style="color: #00c9a7;">Convofy</span> . <br> <span style="font-size: 4.0rem;">Your
+                    Personalized Healthcare Telemedicine Assistant Platform.</span></h3>
             <p>Artificial Intelligence (AI) has revolutionized the field of telemedicine and healthcare, offering
-                innovative solutions
-                to enhance patient care, improve efficiency, and streamline various processes.</p>
+                innovative solutions to enhance patient care, improve efficiency, and streamline various processes.</p>
             <a href="#services" class="btn-home">Learn more<span class="fas fa-chevron-right"></span></a>
         </div>
     </section>
@@ -84,7 +61,6 @@
     <h1 class="heading">What we<span> Provide ?</span></h1>
 
     <section class="icons-container">
-
         <div class="glass">
             <i class="fas fa-user-md"></i>
             <h3>140+</h3>
@@ -93,7 +69,7 @@
         <div class="glass">
             <i class="fa-solid fa-video"></i>
             <h3>1400+</h3>
-            <p>Remote Patient Monitoring</p>
+            <p>Remote Monitoring</p>
         </div>
         <div class="glass">
             <i class="fas fa-users"></i>
@@ -108,243 +84,196 @@
     </section>
 
     <section class="services" id="services">
-        <h1 class="heading">services & <span>Features</span></h1>
+        <h1 class="heading">Services &amp; <span>Features</span></h1>
         <div class="box-container">
             <div class="glass-box">
                 <i class="fas fa-notes-medical"></i>
-                <h3>24 | 7 AI Chat</h3>
+                <h3>24/7 AI Chat</h3>
                 <p>Get instant diagnoses and health advice from our AI assistant anytime, anywhere.</p>
-                <a href="" class="btn"> learn more <span class="fas fa-chevron-right"></span></a>
+                <a href="" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-comments"></i>
-                <h3>Chat with Doctors</h3>
+                <h3>Chat With Doctors</h3>
                 <p>Message our team of licensed doctors and get personalized medical advice.</p>
-                <a href="" class="btn"> learn more <span class="fas fa-chevron-right"></span></a>
+                <a href="" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-video"></i>
                 <h3>Video Conference</h3>
-                <p>Schedule virtual appointments and consultations with top specialists doctors.</p>
-                <a href="{{url_for('videocall')}}" class="btn"> learn more <span class="fas fa-chevron-right"></span></a>
+                <p>Schedule virtual appointments and consultations with top specialist doctors.</p>
+                <a href="{{url_for('videocall')}}" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-user-doctor"></i>
                 <h3>Book Doctors</h3>
-                <p>Search for in-network doctors and instantly book appointments.</p>
-                <a href="#book" class="btn"> learn more <span class="fas fa-chevron-right"></span></a>
+                <p>Search for in-network doctors and instantly book appointments online.</p>
+                <a href="#book" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-envelope"></i>
-                <h3>SMS | Mail service</h3>
+                <h3>SMS &amp; Mail Service</h3>
                 <p>Get medication reminders, test results, and appointment alerts via SMS or email.</p>
-                <a href="" class="btn"> learn more <span class="fas fa-chevron-right"></span></a>
+                <a href="" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-heartbeat"></i>
                 <h3>Scan Reports</h3>
                 <p>Upload and store lab tests, imaging scans, and medical records securely.</p>
-                <a href="#scans" class="btn"> learn more <span class="fas fa-chevron-right"></span></a>
+                <a href="#scans" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-plus"></i>
                 <h3>Emergency</h3>
-                <p>Get immediate emergency assistance and coordination with hospitals.</p>
-                <a href="" class="btn"> learn more <span class="fas fa-chevron-right"></span></a>
+                <p>Get immediate emergency assistance and coordination with nearby hospitals.</p>
+                <a href="" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fa-brands fa-blogger"></i>
-                <h3>Healty Blogs</h3>
+                <h3>Health Blogs</h3>
                 <p>Read our regularly updated blogs with health tips and wellness advice.</p>
-                <a href="" class="btn"> learn more <span class="fas fa-chevron-right"></span></a>
+                <a href="#blogs" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-shield-halved"></i>
                 <h3>Privacy</h3>
-                <p>We take data privacy and security very seriously.</p>
-                <a href="{{url_for('policy')}}" class="btn"> learn more <span class="fas fa-chevron-right"></span></a>
+                <p>We take your data privacy and security extremely seriously at Convofy.</p>
+                <a href="{{url_for('policy')}}" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-hand-holding-heart"></i>
-                <h3>total care</h3>
-                <p>Comprehensive care, from everyday wellness to critical emergencies.</p>
-                <a href="" class="btn"> learn more <span class="fas fa-chevron-right"></span></a>
+                <h3>Total Care</h3>
+                <p>Comprehensive care, from everyday wellness to critical emergency situations.</p>
+                <a href="" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
             </div>
-
         </div>
     </section>
 
     <section class="doctors" id="doctors">
-        <h1 class="heading">
-            our <span> Doctors</span>
-        </h1>
+        <h1 class="heading">Our <span> Doctors</span></h1>
         <div class="box-container">
             <div class="carousel owl-carousel">
                 <div class="glass-box" style="height: 43rem;">
-                    <center><img src="../static/images/doc2.jpg" alt="" style="height: 30rem; width: 25rem;"></center>
+                    <center><img src="../static/images/doc2.jpg" alt="Dr. Vikram Kapoor" style="height: 30rem; width: 25rem; object-fit: cover;"></center>
                     <h3>Dr. Vikram Kapoor</h3>
                     <span>Pediatrician</span>
-                    
                 </div>
                 <div class="glass-box" style="height: 43rem;">
-                    <center>
-                    <img src="../static/images/doc1.jpg" alt="" style="height: 30rem; width: 25rem;">
-
-                    </center>
+                    <center><img src="../static/images/doc1.jpg" alt="Dr. Rahul Desai" style="height: 30rem; width: 25rem; object-fit: cover;"></center>
                     <h3>Dr. Rahul Desai</h3>
                     <span>Cardiologist</span>
-                   
                 </div>
                 <div class="glass-box" style="height: 43rem;">
-                    <center>
-                    <img src="../static/images/doc3.jpeg" alt="" style="height: 30rem; width: 25rem;">
-
-                    </center>
-
+                    <center><img src="../static/images/doc3.jpeg" alt="Dr. Aryan Joshi" style="height: 30rem; width: 25rem; object-fit: cover;"></center>
                     <h3>Dr. Aryan Joshi</h3>
                     <span>Orthopedic Surgeon</span>
-                  
                 </div>
                 <div class="glass-box" style="height: 43rem;">
-                    <center>
-                    <img src="../static/images/doc4.jpg" alt="" style="height: 30rem; width: 25rem;">
-
-                    </center>
-
+                    <center><img src="../static/images/doc4.jpg" alt="Dr. Siddharth Malhotra" style="height: 30rem; width: 25rem; object-fit: cover;"></center>
                     <h3>Dr. Siddharth Malhotra</h3>
                     <span>Psychiatrist</span>
-                   
                 </div>
                 <div class="glass-box" style="height: 43rem;">
-                    <center>
-                    <img src="../static/images/doc5.jpeg" alt="" style="height: 30rem; width: 25rem;">
-
-                    </center>
-
+                    <center><img src="../static/images/doc5.jpeg" alt="Dr. Rohit Choudhary" style="height: 30rem; width: 25rem; object-fit: cover;"></center>
                     <h3>Dr. Rohit Choudhary</h3>
                     <span>Dermatologist</span>
-                   
                 </div>
             </div>
-            
-
         </div>
     </section>
 
-    
-
     <section class="blogs" id="book">
         <h1 class="heading">Book <span>Appointment</span></h1>
-        <center><a class="btn" href="{{ url_for('book_appointment') }}">Book Appointment</a></center>
+        <center><a class="btn" style="font-size: 2rem; padding: 1.2rem 3rem;" href="{{ url_for('book_appointment') }}">Book Appointment <span class="fas fa-chevron-right"></span></a></center>
     </section>
 
     <section class="services" id="scans">
-        <h1 class="heading">Scans &<span> Predictions</span></h1>
+        <h1 class="heading">Scans &amp; <span>Predictions</span></h1>
         <div class="box-container">
             <div class="glass-box">
                 <i class="fas fa-stethoscope"></i>
                 <h3>Disease Prediction</h3>
-                <p>Disease prediction using ML involves analyzing medical data to forecast the likelihood of a specific
-                ailment, enabling early intervention.</p>
-                <a href="{{url_for('disease_predict')}}" class="btn"> Explore <span
-                        class="fas fa-chevron-right"></span></a>
+                <p>Disease prediction using ML involves analyzing medical data to forecast the likelihood of a specific ailment, enabling early intervention.</p>
+                <a href="{{url_for('disease_predict')}}" class="btn">Explore <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-lungs"></i>
                 <h3>Lung Cancer</h3>
-                <p>Lung cancer is a malignant lung tumor, often caused by smoking. Symptoms include coughing, chest pain, and difficulty
-                breathing.</p>
-                <a href="{{url_for('lung')}}" class="btn"> Explore <span class="fas fa-chevron-right"></span></a>
+                <p>Lung cancer is a malignant lung tumor, often caused by smoking. Symptoms include coughing, chest pain, and difficulty breathing.</p>
+                <a href="{{url_for('lung')}}" class="btn">Explore <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-brain"></i>
                 <h3>Brain Tumor</h3>
-                <p>Brain tumors are abnormal growths in the brain. Symptoms vary, and treatment may involve surgery, radiation, or
-                chemotherapy.</p>
-                <a href="{{url_for('braintumor')}}" class="btn"> Explore <span class="fas fa-chevron-right"></span></a>
+                <p>Brain tumors are abnormal growths in the brain. Symptoms vary, and treatment may involve surgery, radiation, or chemotherapy.</p>
+                <a href="{{url_for('braintumor')}}" class="btn">Explore <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-eye"></i>
-                <h3>cataract</h3>
-                <p>Cataract is a clouding of the eye's lens, causing blurry vision. Common with aging, surgery replaces the clouded lens
-                for clarity.</p>
-                <a href="{{url_for('cataract')}}" class="btn"> Explore <span class="fas fa-chevron-right"></span></a>
+                <h3>Cataract</h3>
+                <p>Cataract is a clouding of the eye's lens, causing blurry vision. Common with aging, surgery replaces the clouded lens for clarity.</p>
+                <a href="{{url_for('cataract')}}" class="btn">Explore <span class="fas fa-chevron-right"></span></a>
             </div>
-
-
         </div>
     </section>
 
-
-
     <section class="blogs" id="blogs">
-        <h1 class="heading">our <span> Blogs</span></h1>
+        <h1 class="heading">Health <span>Blogs</span></h1>
         <div class="box-container">
             <div class="glass-box">
                 <div class="image">
-                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/health-checkup-5629721-4695022.png"
-                        alt="">
+                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/health-checkup-5629721-4695022.png" alt="Transforming Healthcare">
                 </div>
                 <div class="content">
                     <div class="icon">
-                        <a href="" class="disabled"><i class="fas fa-calendar"></i> 25th dec, 2023</a>
-                        <a href="{{url_for('admin')}}"><i class="fas fa-user"></i> by admin</a>
-
+                        <a href="" class="disabled"><i class="fas fa-calendar"></i> 25 Dec, 2023</a>
+                        <a href="#"><i class="fas fa-user"></i> By Convofy</a>
                     </div>
                     <h3>Transforming Healthcare</h3>
                     <p>Transforming Healthcare: The Human Touch of AI and Telemedicine.</p>
-                    <a href="{{url_for('Transforming_Healthcare')}}" class="btn">Read more <span
-                            class="fas fa-chevron-right"></span></a>
+                    <a href="{{url_for('Transforming_Healthcare')}}" class="btn">Read more <span class="fas fa-chevron-right"></span></a>
                 </div>
             </div>
             <div class="glass-box">
                 <div class="image">
-                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/healthy-life-6358794-5272656.png" alt="">
+                    <img src="https://cdn3d.iconscout.com/3d/premium/thumb/healthy-life-6358794-5272656.png" alt="Holistic Health">
                 </div>
                 <div class="content">
                     <div class="icon">
-                        <a href="" class="disabled"><i class="fas fa-calendar"></i> 26th dec, 2023</a>
-                        <a href="{{url_for('admin')}}"><i class="fas fa-user"></i> by admin</a>
-
+                        <a href="" class="disabled"><i class="fas fa-calendar"></i> 26 Dec, 2023</a>
+                        <a href="#"><i class="fas fa-user"></i> By Convofy</a>
                     </div>
                     <h3>Comprehensive Guide to Health</h3>
                     <p>A Comprehensive Guide to Holistic Health: Nurturing Your Mind and Body.</p>
-                    <a href="{{url_for('Holistic_Health')}}" class="btn">Read more <span
-                            class="fas fa-chevron-right"></span></a>
+                    <a href="{{url_for('Holistic_Health')}}" class="btn">Read more <span class="fas fa-chevron-right"></span></a>
                 </div>
             </div>
             <div class="glass-box">
                 <div class="image">
-                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/eating-healthy-food-5071179-4263644.png?f=webp"
-                        alt="">
+                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/eating-healthy-food-5071179-4263644.png?f=webp" alt="Healthy Diet">
                 </div>
                 <div class="content">
                     <div class="icon">
-                        <a href="" class="disabled"><i class="fas fa-calendar"></i> 27th dec, 2023</a>
-                        <a href="{{url_for('admin')}}"><i class="fas fa-user"></i> by admin</a>
-
+                        <a href="" class="disabled"><i class="fas fa-calendar"></i> 27 Dec, 2023</a>
+                        <a href="#"><i class="fas fa-user"></i> By Convofy</a>
                     </div>
                     <h3>The Power of a Healthy Diet</h3>
-                    <p>"Nourishing Your Body: The Power of a Healthy Diet</p>
-                    <a href="{{url_for('Nourishing_Body')}}" class="btn">Read more <span
-                            class="fas fa-chevron-right"></span></a>
+                    <p>Nourishing Your Body: The Power of a Healthy Diet and Balanced Nutrition.</p>
+                    <a href="{{url_for('Nourishing_Body')}}" class="btn">Read more <span class="fas fa-chevron-right"></span></a>
                 </div>
             </div>
             <div class="glass-box">
                 <div class="image">
-                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/man-doing-exercise-with-dumbells-4075152-3374986.png?f=webp"
-                        alt="">
+                    <img src="https://cdni.iconscout.com/illustration/premium/thumb/man-doing-exercise-with-dumbells-4075152-3374986.png?f=webp" alt="Importance of Games">
                 </div>
                 <div class="content">
                     <div class="icon">
-                        <a href="" class="disabled"><i class="fas fa-calendar"></i> 27th dec, 2023</a>
-                        <a href="{{url_for('admin')}}"><i class="fas fa-user"></i> by admin</a>
-
+                        <a href="" class="disabled"><i class="fas fa-calendar"></i> 27 Dec, 2023</a>
+                        <a href="#"><i class="fas fa-user"></i> By Convofy</a>
                     </div>
                     <h3>The Importance of Games</h3>
-                    <p>The Importance of Games in Maintaining Physical and Mental Health</p>
-                    <a href="{{url_for('Importance_of_Games')}}" class="btn">Read more <span
-                            class="fas fa-chevron-right"></span></a>
+                    <p>The Importance of Games in Maintaining Physical and Mental Health.</p>
+                    <a href="{{url_for('Importance_of_Games')}}" class="btn">Read more <span class="fas fa-chevron-right"></span></a>
                 </div>
             </div>
         </div>
@@ -354,92 +283,73 @@
         <h1 class="heading">About <span> Us </span></h1>
         <div class="row">
             <div class="image">
-                <img src="../static/images/about-us-page-animate.svg" alt="">
-
+                <img src="../static/images/about-us-page-animate.svg" alt="About Convofy">
             </div>
             <div class="content">
-                <h3>we take care of your healthy life.</h3>
-                <p>We are a Group of two undergrad student of KIIT, Bhubaneswar, Odisha, INDIA.</p>
-                <p>Still learning and have a great interest in developing and integrating different types of
-                    technologies. Worked with various Tech stacks and participated in numerous events, hackathons and
-                    competetions and the count will never stop. <br> Want to know more about us ? Click below to explore:
-                </p>
-                <a href="{{url_for('admin')}}" class="btn">Know More <i class="fas fa-chevron-right"></i></a><br>
-
+                <h3>We take care of your healthy life.</h3>
+                <p>Convofy is a next-generation AI healthcare platform bridging the gap between patients and top medical professionals with cutting-edge technology and compassion.</p>
+                <p>We provide seamless telemedicine experiences — from appointment booking to AI-powered scan analysis — ensuring every patient gets timely, accurate, and affordable healthcare access.</p>
+                <a href="{{url_for('index')}}#services" class="btn">Explore Services <i class="fas fa-chevron-right"></i></a>
             </div>
         </div>
     </section>
 
-    <section class="footer">
-        <div class="box-container">
-            <div class="box">
-                <h3>quick links</h3>
-                <a href="{{url_for('index')}}#home"><i class="fas fa-chevron-right"></i> home</a>
-                <a href="{{url_for('index')}}#services"><i class="fas fa-chevron-right"></i> services</a>
-                <a href="{{url_for('index')}}#book"><i class="fas fa-chevron-right"></i>book</a>
-                <a href="{{url_for('index')}}#scans"><i class="fas fa-chevron-right"></i> scans</a>
-                <a href="{{url_for('index')}}#blogs"><i class="fas fa-chevron-right"></i> blogs</a>
-                <a href="{{url_for('index')}}#about"><i class="fas fa-chevron-right"></i> about</a>
-
-
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
+                <p>Your personalized AI-powered healthcare telemedicine platform, connecting patients with the best medical professionals worldwide.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                </div>
             </div>
-            <div class="box">
-                <h3>our services </h3>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-
-
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="{{url_for('index')}}#services">Services</a>
+                <a href="{{url_for('index')}}#scans">AI Scans</a>
+                <a href="{{url_for('index')}}#book">Book Appointment</a>
+                <a href="{{url_for('index')}}#blogs">Health Blogs</a>
             </div>
-            <div class="box">
-                <h3>contact info</h3>
-                <a href="" class="disabled"><i class="fas fa-phone"></i>+91 70441 35575</a>
-                <a href="" class="disabled"><i class="fas fa-phone"></i> +91 62916 53332</a>
-                <a href="mailto:21051302@kiit.ac.in"><i class="fas fa-envelope"></i>21051302@kiit.ac.in</a>
-                <a href="mailto:21051706@kiit.ac.in"><i class="fas fa-envelope"></i>21051706@kiit.ac.in</a>
-                <a href="" class="disabled"><i class="fas fa-map-marker-alt"></i>WB, INDIA</a>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="{{url_for('disease_predict')}}">Disease Predictor</a>
+                <a href="{{url_for('braintumor')}}">Brain Tumor Detection</a>
+                <a href="{{url_for('lung')}}">Lung Cancer Detection</a>
+                <a href="{{url_for('cataract')}}">Cataract Detection</a>
             </div>
-            <div class="box">
-                <h3>follow us</h3>
-                <a href="https://www.linkedin.com/in/abhishek-mallick09/"><i class="fab fa-linkedin"></i>linkedin</a>
-                <a href="https://www.linkedin.com/in/deepraj-bera-b64996231/"><i
-                        class="fab fa-linkedin"></i>linkedin</a>
-                <a href="https://github.com/Abhishek-Mallick"><i class="fab fa-github"></i>Github</a>
-                <a href="https://github.com/deepraj21"><i class="fab fa-github"></i>Github</a>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="{{url_for('index')}}#about">About Us</a>
+                <a href="{{url_for('policy')}}">Privacy Policy</a>
+                <a href="{{url_for('policy')}}">Terms of Service</a>
+                <a href="mailto:support@convofy.health">Contact Us</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <a href="mailto:support@convofy.health"><i class="fas fa-envelope"></i> support@convofy.health</a>
+                <a href="tel:+11234567890"><i class="fas fa-phone"></i> +1 (123) 456-7890</a>
+                <a href="#" class="disabled"><i class="fas fa-map-marker-alt"></i> San Francisco, CA</a>
             </div>
         </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Convofy. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="{{url_for('policy')}}">Privacy Policy</a>
+                <a href="{{url_for('policy')}}">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
 
-        <div class="credit">made with 💚 | Jansevak @ 2023</div>
-    </section>
     <script src="./static/js/script.js"></script>
     <script>
         $('.carousel').owlCarousel({
-            margin: 20,
-            loop: true,
-            autoplay: true,
-            autoplayTimeOut: 2000,
-            autoplayHoverPause: true,
-            responsive: {
-                0: {
-                    items: 1,
-                    nav: false
-                },
-                600: {
-                    items: 2,
-                    nav: false
-                },
-                1000: {
-                    items: 4,
-                    nav: false
-                }
-            }
+            margin: 20, loop: true, autoplay: true,
+            autoplayTimeOut: 2500, autoplayHoverPause: true,
+            responsive: { 0: { items: 1 }, 600: { items: 2 }, 1000: { items: 4 } }
         });
     </script>
-
-
 </body>
-
 </html>

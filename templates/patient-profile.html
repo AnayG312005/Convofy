@@ -1,75 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jansevak</title>
+    <title>Convofy — My Profile</title>
     <link rel="icon" href="./static/images/heart-pulse-solid.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./static/css/style.css">
     <style>
-        @media (max-width:768px) {
-            img{
-                display: none;
-            }
-        }
+        @media (max-width:768px) { .profile-img { display: none; } }
     </style>
 </head>
-
 <body>
     <header class="header">
-        <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> jansevak</a>
+        <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
         <nav class="navbar">
             {% if username %}
-            <a href="" class="disabled">{{username}}</a>
+            <a href="{{url_for('index')}}">Home</a>
+            <a href="" class="disabled" style="color: var(--green);">{{username}}</a>
             <a href="{{url_for('logout')}}">Logout</a>
             {% else %}
             <a href="{{url_for('login')}}">Login</a>
             {% endif %}
-    
         </nav>
-    
         <div id="menu-btn" class="fas fa-bars"></div>
-    
     </header>
 
     {% if user_appointments %}
     <section class="about" id="about">
-        <h1 class="heading" style="margin-top: 8rem;">User <span> Profile </span></h1>
+        <h1 class="heading" style="margin-top: 8rem;">User <span>Profile</span></h1>
         <div class="row">
-            <div class="image" >
-                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/user-3711850-3105265.png?f=webp" alt="">
-    
+            <div class="image profile-img">
+                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/user-3711850-3105265.png?f=webp" alt="User Avatar">
             </div>
             <div class="content">
-                <h3>Username: <span style="font-size: 2.5rem;">{{username}}</span></h3>
+                <h3>Hello, <span style="font-size: 2.8rem; color: var(--green);">{{username}}</span></h3>
                 {% for appointment in user_appointments %}
                 {% if loop.first %}
-                <h3>Full name: <span style="font-size: 2.5rem;">{{appointment.name}}</span></h3>
-                <h3>Age: <span style="font-size: 2.5rem;">{{appointment.age}}</span></h3>
-                <h3>Blood Group: <span style="font-size: 2.5rem;">{{appointment.blood_group}}</span></h3>
-                <h3>Phone Number: <span style="font-size: 2.5rem;">{{appointment.phone_number}}</span></h3>
-                <h3>Email: <span style="font-size: 2.5rem;">{{appointment.email}}</span></h3>
+                <p style="color: var(--light-color); font-size: 1.5rem; margin: 1.5rem 0; text-transform: none; line-height: 2.2;">
+                    <strong style="color: white;">Full Name:</strong> {{appointment.name}}<br>
+                    <strong style="color: white;">Age:</strong> {{appointment.age}}<br>
+                    <strong style="color: white;">Blood Group:</strong> {{appointment.blood_group}}<br>
+                    <strong style="color: white;">Phone:</strong> {{appointment.phone_number}}<br>
+                    <strong style="color: white;">Email:</strong> {{appointment.email}}
+                </p>
                 {% endif %}
-            {% endfor %}
+                {% endfor %}
+                <a href="{{url_for('index')}}" class="btn">Back to Dashboard <i class="fas fa-chevron-right"></i></a>
             </div>
         </div>
     </section>
 
-    
-    <h1 class="heading" style="margin-top: 100px;">Your <span>Appointments:</span></h1>
+    <h1 class="heading" style="margin-top: 5rem;">Your <span>Appointments</span></h1>
     <section class="book" id="book">
-    
         <div class="glass-row-book">
             <table>
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Time Slot</th>
-                        <th>Type of Doctor</th>
+                        <th>Doctor Specialty</th>
                         <th>Status</th>
                         <th>Prescription</th>
                     </tr>
@@ -80,80 +72,90 @@
                         <td>{{ appointment.name }}</td>
                         <td>{{ appointment.time_slot }}</td>
                         <td>{{ appointment.type_of_doctor }}</td>
-                        <td
-                            style="color: {% if appointment.status == 'Approved' %}#16a085{% elif appointment.status == 'Rejected' %}red{% else %}white{% endif %}">
-                            {{ appointment.status }}</td>
+                        <td style="color: {% if appointment.status == 'Approved' %}#00c9a7{% elif appointment.status == 'Rejected' %}#ef4444{% else %}white{% endif %}; font-weight: 600;">
+                            {{ appointment.status }}
+                        </td>
                         <td>
                             {% if appointment.status == 'Prescribed' %}
-                            <a href="{{ url_for('view_prescription_patient', appointment_id=appointment.id) }}" target="_blank">Preview Prescription</a>
+                            <a href="{{ url_for('view_prescription_patient', appointment_id=appointment.id) }}" target="_blank">View Prescription</a>
+                            {% else %}
+                            <span style="color: var(--light-color); font-size: 1.3rem;">Not yet prescribed</span>
                             {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
-    
         </div>
     </section>
+
     {% else %}
     <section class="about" id="about">
-        <h1 class="heading" style="margin-top: 8rem;">User <span> Profile </span></h1>
+        <h1 class="heading" style="margin-top: 8rem;">User <span>Profile</span></h1>
         <div class="row">
-            <div class="image">
-                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/user-3711850-3105265.png?f=webp" alt="">
-    
+            <div class="image profile-img">
+                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/user-3711850-3105265.png?f=webp" alt="User Avatar">
             </div>
             <div class="content">
-                <h3>Username: <span style="font-size: 2.5rem;">{{username}}</span></h3>
-                <h3>Email: <span style="font-size: 2.5rem;">{{Email}}</span></h3>
+                <h3>Hello, <span style="font-size: 2.8rem; color: var(--green);">{{username}}</span></h3>
+                <p style="color: var(--light-color); font-size: 1.5rem; margin: 1.5rem 0; text-transform: none; line-height: 2;">
+                    <strong style="color: white;">Email:</strong> {{Email}}
+                </p>
+                <p style="color: var(--light-color); font-size: 1.4rem; text-transform: none;">You have no appointments yet. Book your first appointment to get started!</p>
+                <a href="{{url_for('book_appointment')}}" class="btn" style="margin-top: 1.5rem;">Book Appointment <i class="fas fa-chevron-right"></i></a>
             </div>
         </div>
     </section>
     {% endif %}
 
-    <section class="footer">
-        <div class="box-container">
-            <div class="box">
-                <h3>quick links</h3>
-                <a href="{{url_for('index')}}#home"><i class="fas fa-chevron-right"></i> home</a>
-                <a href="{{url_for('index')}}#services"><i class="fas fa-chevron-right"></i> services</a>
-                <a href="{{url_for('index')}}#book"><i class="fas fa-chevron-right"></i>book</a>
-                <a href="{{url_for('index')}}#scans"><i class="fas fa-chevron-right"></i> scans</a>
-                <a href="{{url_for('index')}}#blogs"><i class="fas fa-chevron-right"></i> blogs</a>
-                <a href="{{url_for('index')}}#about"><i class="fas fa-chevron-right"></i> about</a>
-    
-    
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
+                <p>Your personalized AI-powered healthcare telemedicine platform, connecting patients with the best medical professionals worldwide.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                </div>
             </div>
-            <div class="box">
-                <h3>our services </h3>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-    
-    
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="{{url_for('index')}}#services">Services</a>
+                <a href="{{url_for('index')}}#scans">AI Scans</a>
+                <a href="{{url_for('book_appointment')}}">Book Appointment</a>
+                <a href="{{url_for('index')}}#blogs">Health Blogs</a>
             </div>
-            <div class="box">
-                <h3>contact info</h3>
-                <a href="" class="disabled"><i class="fas fa-phone"></i>+91 70441 35575</a>
-                <a href="" class="disabled"><i class="fas fa-phone"></i> +91 62916 53332</a>
-                <a href="mailto:21051302@kiit.ac.in"><i class="fas fa-envelope"></i>21051302@kiit.ac.in</a>
-                <a href="mailto:21051706@kiit.ac.in"><i class="fas fa-envelope"></i>21051706@kiit.ac.in</a>
-                <a href="" class="disabled"><i class="fas fa-map-marker-alt"></i>WB, INDIA</a>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="{{url_for('disease_predict')}}">Disease Predictor</a>
+                <a href="{{url_for('braintumor')}}">Brain Tumor Detection</a>
+                <a href="{{url_for('lung')}}">Lung Cancer Detection</a>
+                <a href="{{url_for('cataract')}}">Cataract Detection</a>
             </div>
-            <div class="box">
-                <h3>follow us</h3>
-                <a href="https://www.linkedin.com/in/abhishek-mallick09/"><i class="fab fa-linkedin"></i>linkedin</a>
-                <a href="https://www.linkedin.com/in/deepraj-bera-b64996231/"><i class="fab fa-linkedin"></i>linkedin</a>
-                <a href="https://github.com/Abhishek-Mallick"><i class="fab fa-github"></i>Github</a>
-                <a href="https://github.com/deepraj21"><i class="fab fa-github"></i>Github</a>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="{{url_for('index')}}#about">About Us</a>
+                <a href="{{url_for('policy')}}">Privacy Policy</a>
+                <a href="{{url_for('policy')}}">Terms of Service</a>
+                <a href="mailto:support@convofy.health">Contact Us</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <a href="mailto:support@convofy.health"><i class="fas fa-envelope"></i> support@convofy.health</a>
+                <a href="tel:+11234567890"><i class="fas fa-phone"></i> +1 (123) 456-7890</a>
+                <a href="#" class="disabled"><i class="fas fa-map-marker-alt"></i> San Francisco, CA</a>
             </div>
         </div>
-    
-        <div class="credit">made with 💚 | Jansevak @ 2023</div>
-    </section>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Convofy. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="{{url_for('policy')}}">Privacy Policy</a>
+                <a href="{{url_for('policy')}}">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
     <script src="./static/js/script.js"></script>
 </body>
 </html>

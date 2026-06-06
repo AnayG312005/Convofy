@@ -325,12 +325,7 @@ def Importance_of_Games():
 
 @app.route('/admin')
 def admin():
-    username = None
-    if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-        username = user.username
-        return render_template('admin.html',username=username)
-    return render_template('index.html')
+    return redirect(url_for('index'))
 
 @app.route('/videocall')
 def videocall():

@@ -1,125 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jansevak</title>
+    <meta name="description" content="Book a medical appointment on Convofy — AI-powered healthcare telemedicine platform.">
+    <title>Convofy — Book Appointment</title>
     <link rel="icon" href="./static/images/heart-pulse-solid.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./static/css/style.css">
     <style>
-        label {
-            color: white;
-            font-size: 1.3rem;
-        }
+        label { color: var(--light-color); font-size: 1.3rem; display: block; margin-bottom: 0.3rem; margin-top: 1rem; text-transform: none; }
     </style>
 </head>
-
 <body>
     <header class="header">
-        <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> jansevak</a>
+        <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
         <nav class="navbar">
             {% if username %}
             <a href="{{url_for('index')}}#home">Home</a>
-            <a href="{{url_for('index')}}#services">services</a>
+            <a href="{{url_for('index')}}#services">Services</a>
             <a href="{{url_for('index')}}#book">Book</a>
             <a href="{{url_for('index')}}#scans">Scans</a>
             <a href="{{url_for('index')}}#blogs">Blogs</a>
-            <a href="{{url_for('index')}}#about">about</a>
+            <a href="{{url_for('index')}}#about">About</a>
             <a href="{{url_for('profile')}}"><span class="fas fa-user"></span></a>
             {% else %}
             <a href="{{url_for('login')}}">Login</a>
             {% endif %}
         </nav>
-
         <div id="menu-btn" class="fas fa-bars"></div>
-
     </header>
+
     <section class="book" id="book">
-        <h1 class="heading" style="margin-top: 8rem;"> <span>Book</span> Appointment</h1>
-        <div class="glass-row" style="margin-top:40px;">
+        <h1 class="heading" style="margin-top: 8rem;"><span>Book</span> Appointment</h1>
+        <div class="glass-row" style="margin-top: 40px;">
             <form action="{{ url_for('book_appointment') }}" method="post">
-                <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Jansevak</a><br><br>
-                <label for="name">Enter your name:</label>
-                <input type="text" placeholder="Patient Name" class="box" id="Name" name="name" required>
-                <label for="name">Enter your Age:</label>
-                <input placeholder="Age" class="box" id="Age" type="number" name="age" required min="15" max="75">
-                <label for="name">Enter your Blood Group:</label>
-                <input placeholder="Blood group" class="box" id="Blood group" type="text" name="blood_group" required>
-                <label for="name">Select Preferred time slot :</label>
+                <a href="{{url_for('index')}}" class="logo" style="display: block; text-align: center; margin-bottom: 2rem;"><i class="fas fa-heartbeat"></i> Convofy</a>
+
+                <label for="Name">Full Name</label>
+                <input type="text" placeholder="Enter your full name" class="box" id="Name" name="name" required>
+
+                <label for="Age">Age</label>
+                <input placeholder="Enter your age" class="box" id="Age" type="number" name="age" required min="15" max="75">
+
+                <label for="Blood_group">Blood Group</label>
+                <input placeholder="E.g. A+, B-, O+" class="box" id="Blood_group" type="text" name="blood_group" required>
+
+                <label for="time_slot">Preferred Time Slot</label>
                 <select name="time_slot" required>
-                    <option value="Morning">Morning (8AM-11AM)</option>
-                    <option value="Afternoon">Afternoon (1PM-4PM)</option>
-                    <option value="Evening">Evening (5PM-8PM)</option>
-                </select><br><br>
-                <label for="name">Enter your Phone Number:</label>
-                <input placeholder="Phone Number" class="box" id="Phone Number" type="number" name="phone_number" required>
-                <label for="name">Enter your Email:</label>
-                <input placeholder="Email" class="box" id="Email" type="email" name="email" required>
-                <label for="name">Select type of doctor :</label>
+                    <option value="Morning">Morning (8AM – 11AM)</option>
+                    <option value="Afternoon">Afternoon (1PM – 4PM)</option>
+                    <option value="Evening">Evening (5PM – 8PM)</option>
+                </select>
+
+                <label for="Phone_Number">Phone Number</label>
+                <input placeholder="Enter your phone number" class="box" id="Phone_Number" type="number" name="phone_number" required>
+
+                <label for="Email">Email Address</label>
+                <input placeholder="Enter your email address" class="box" id="Email" type="email" name="email" required>
+
+                <label for="type_of_doctor">Select Doctor Specialty</label>
                 <select name="type_of_doctor" required>
                     {% for doctor_type in doctor_types %}
-                    <div class="select_option">
-                        <option value="{{ doctor_type }}">{{ doctor_type }}</option>
-                    </div>
+                    <option value="{{ doctor_type }}">{{ doctor_type }}</option>
                     {% endfor %}
-                </select><br>
+                </select>
+                <br>
 
-                <input type="submit" value="Book" class="btn">
-                <p style="color: white; font-size: 1.3rem; margin-top: 2rem;">By continuing, you agree to Jansevak's <a
-                        style="color: #16a085;" href="{{url_for('policy')}}">Terms of Service</a> Opens a new tab and
-                    acknowledge you've read our Privacy
-                    Policy. Notice at collection.</p>
+                <input type="submit" value="Confirm Booking" class="btn" style="width: 100%; margin-top: 1.5rem; padding: 1.2rem; font-size: 1.6rem; font-weight: 700; background: var(--green); color: #fff; border-radius: 10px; border: 2px solid var(--green); text-transform: uppercase; letter-spacing: 0.05em; cursor: pointer;">
+
+                <p style="color: rgba(255,255,255,0.5); font-size: 1.2rem; margin-top: 1.5rem; text-transform: none; text-align: center;">
+                    By continuing, you agree to Convofy's <a style="color: var(--green);" href="{{url_for('policy')}}">Terms of Service</a> and Privacy Policy.
+                </p>
             </form>
         </div>
     </section>
-    <section class="footer">
-        <div class="box-container">
-            <div class="box">
-                <h3>quick links</h3>
-                <a href="{{url_for('index')}}#home"><i class="fas fa-chevron-right"></i> home</a>
-                <a href="{{url_for('index')}}#services"><i class="fas fa-chevron-right"></i> services</a>
-                <a href="{{url_for('index')}}#book"><i class="fas fa-chevron-right"></i>book</a>
-                <a href="{{url_for('index')}}#scans"><i class="fas fa-chevron-right"></i> scans</a>
-                <a href="{{url_for('index')}}#blogs"><i class="fas fa-chevron-right"></i> blogs</a>
-                <a href="{{url_for('index')}}#about"><i class="fas fa-chevron-right"></i> about</a>
-            </div>
-            <div class="box">
-                <h3>our services </h3>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
-                <a href=""><i class="fas fa-chevron-right"></i> Chatbot</a>
 
-
+    <footer class="footer">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
+                <p>Your personalized AI-powered healthcare telemedicine platform, connecting patients with the best medical professionals worldwide.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                </div>
             </div>
-            <div class="box">
-                <h3>contact info</h3>
-                <a href="" class="disabled"><i class="fas fa-phone"></i>+91 70441 35575</a>
-                <a href="" class="disabled"><i class="fas fa-phone"></i> +91 62916 53332</a>
-                <a href="mailto:21051302@kiit.ac.in"><i class="fas fa-envelope"></i>21051302@kiit.ac.in</a>
-                <a href="mailto:21051706@kiit.ac.in"><i class="fas fa-envelope"></i>21051706@kiit.ac.in</a>
-                <a href="" class="disabled"><i class="fas fa-map-marker-alt"></i>WB, INDIA</a>
+            <div class="footer-col">
+                <h4>Product</h4>
+                <a href="{{url_for('index')}}#services">Services</a>
+                <a href="{{url_for('index')}}#scans">AI Scans</a>
+                <a href="{{url_for('index')}}#book">Book Appointment</a>
+                <a href="{{url_for('index')}}#blogs">Health Blogs</a>
             </div>
-            <div class="box">
-                <h3>follow us</h3>
-                <a href="https://www.linkedin.com/in/abhishek-mallick09/"><i class="fab fa-linkedin"></i>linkedin</a>
-                <a href="https://www.linkedin.com/in/deepraj-bera-b64996231/"><i
-                        class="fab fa-linkedin"></i>linkedin</a>
-                <a href="https://github.com/Abhishek-Mallick"><i class="fab fa-github"></i>Github</a>
-                <a href="https://github.com/deepraj21"><i class="fab fa-github"></i>Github</a>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="{{url_for('disease_predict')}}">Disease Predictor</a>
+                <a href="{{url_for('braintumor')}}">Brain Tumor Detection</a>
+                <a href="{{url_for('lung')}}">Lung Cancer Detection</a>
+                <a href="{{url_for('cataract')}}">Cataract Detection</a>
+            </div>
+            <div class="footer-col">
+                <h4>Company</h4>
+                <a href="{{url_for('index')}}#about">About Us</a>
+                <a href="{{url_for('policy')}}">Privacy Policy</a>
+                <a href="{{url_for('policy')}}">Terms of Service</a>
+                <a href="mailto:support@convofy.health">Contact Us</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contact</h4>
+                <a href="mailto:support@convofy.health"><i class="fas fa-envelope"></i> support@convofy.health</a>
+                <a href="tel:+11234567890"><i class="fas fa-phone"></i> +1 (123) 456-7890</a>
+                <a href="#" class="disabled"><i class="fas fa-map-marker-alt"></i> San Francisco, CA</a>
             </div>
         </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Convofy. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="{{url_for('policy')}}">Privacy Policy</a>
+                <a href="{{url_for('policy')}}">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
 
-        <div class="credit">made with 💚 | Jansevak @ 2023</div>
-    </section>
     <script src="../static/js/script.js"></script>
-
 </body>
-
 </html>

@@ -1,53 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jansevak</title>
+    <meta name="description" content="Login to Convofy — AI-powered healthcare telemedicine platform.">
+    <title>Convofy — Login</title>
     <link rel="icon" href="./static/images/heart-pulse-solid.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="./static/css/style.css">
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        .auth-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 4rem;
+            width: 100%;
+            max-width: 48rem;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+        }
+        .auth-card .logo {
+            display: block;
+            text-align: center;
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+        .auth-card .auth-subtitle {
+            text-align: center;
+            color: var(--light-color);
+            font-size: 1.5rem;
+            margin-bottom: 3rem;
+            text-transform: none;
+        }
+        .auth-card .box {
+            width: 100%;
+            margin: 1rem 0;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            font-size: 1.5rem;
+            color: #fff;
+            text-transform: none;
+            padding: 1.2rem 1.5rem;
+            background: rgba(255,255,255,0.04);
+            display: block;
+        }
+        .auth-card .box:focus {
+            border-color: var(--green);
+            background: rgba(0,201,167,0.04);
+        }
+        .auth-card .box::placeholder { color: rgba(255,255,255,0.35); }
+        .auth-submit {
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: 1.3rem;
+            background: var(--green);
+            color: #fff;
+            border-radius: 10px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: 2px solid var(--green);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            display: block;
+        }
+        .auth-submit:hover {
+            background: transparent;
+            color: var(--green);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,201,167,0.3);
+        }
+        .auth-note {
+            color: rgba(255,255,255,0.5);
+            font-size: 1.2rem;
+            margin-top: 2rem;
+            line-height: 1.7;
+            text-transform: none;
+            text-align: center;
+        }
+        .auth-note a { color: var(--green); font-weight: 500; }
+        .auth-switch {
+            color: rgba(255,255,255,0.6);
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            text-align: center;
+            text-transform: none;
+        }
+        .auth-switch a { color: var(--green); font-size: 1.6rem; font-weight: 600; }
+        .flash-msg {
+            background: rgba(239,68,68,0.12);
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 8px;
+            color: #fc8181;
+            font-size: 1.3rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-transform: none;
+        }
+        .flash-msg.success {
+            background: rgba(0,201,167,0.1);
+            border-color: rgba(0,201,167,0.3);
+            color: var(--green);
+        }
+        label.field-label {
+            color: var(--light-color);
+            font-size: 1.3rem;
+            display: block;
+            margin-bottom: 0.3rem;
+            margin-top: 0.8rem;
+            text-transform: none;
+        }
+    </style>
 </head>
-
 <body>
-    <section class="book" id="book">
-        <h1 class="heading"> <span>have </span> account ? Login</h1>
-        {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-        {% for category, message in messages %}
-        <center>
-        <p  style="color: white; font-size: 1.5rem;" class="alert alert-{{ category }}">{{ message }}</p>
-        </center>
-        {% endfor %}
-        {% endif %}
-        {% endwith %}
-        <div class="glass-row" style="margin-top:100px;">
-            <!-- <div class="image"></div> -->
+    <div class="auth-page">
+        <div class="auth-card">
+            <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
+            <p class="auth-subtitle">Sign in to your account</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash-msg {% if category == 'success' %}success{% endif %}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+
             <form action="{{url_for('login')}}" method="post">
-                <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Jansevak</a><br><br>
-                <input type="text" placeholder="Username" class="box" id="username" name="username">
-                <input type="password" placeholder="password" class="box" id="password" name="password">
-                <!-- <div style="display: inline-flex; "><input type="checkbox"> <p style="color: white; font-size: 1.5rem;"> Remember me</p></div><br> -->
-               
-                <input type="submit" value="Login" class="btn">
-                <p style="color: white; font-size: 1.3rem; margin-top: 2rem;">By continuing, you agree to Jansevak's <a
-                        style="color: #16a085;" href="{{url_for('policy')}}">Terms of Service</a> Opens a new tab and
-                    acknowledge you've read our Privacy
-                    Policy. Notice at collection.</p>
-                <p style="color: white; font-size: 1.3rem; margin-top: 2rem;">Dont have an account ?<a
-                        style="color: #16a085; font-size: 2.0rem; margin-top: 2rem;"
-                        href="{{url_for('register')}}"><span> Register</span></a></p>
-
+                <label class="field-label" for="username">Username</label>
+                <input type="text" placeholder="Enter your username" class="box" id="username" name="username" required>
+                <label class="field-label" for="password">Password</label>
+                <input type="password" placeholder="Enter your password" class="box" id="password" name="password" required>
+                <input type="submit" value="Sign In" class="auth-submit">
+                <p class="auth-note">By continuing, you agree to Convofy's <a href="{{url_for('policy')}}">Terms of Service</a> and acknowledge you've read our Privacy Policy.</p>
+                <p class="auth-switch">Don't have an account? <a href="{{url_for('register')}}"> Register</a></p>
             </form>
-
         </div>
-    </section>
-    <section class="footer">
-        <div  class="credit">made with 💚 | Jansevak @ 2023</div>
-    </section>
-</body>
+    </div>
 
+    <footer class="footer">
+        <div class="footer-bottom" style="border-top: 1px solid rgba(255,255,255,0.06); padding-top: 2rem;">
+            <p>&copy; 2024 Convofy. All rights reserved.</p>
+            <div class="footer-links">
+                <a href="{{url_for('policy')}}">Privacy Policy</a>
+                <a href="{{url_for('policy')}}">Terms of Service</a>
+            </div>
+        </div>
+    </footer>
+</body>
 </html>

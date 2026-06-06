@@ -1,0 +1,24 @@
+Analyze the entire website and fix all existing bugs, UI inconsistencies, broken links, responsiveness issues, alignment problems, overflow issues, animation glitches, accessibility issues, and performance bottlenecks. Ensure the website works perfectly across desktop, tablet, and mobile devices.
+
+Rename the complete platform from its current name to Convofy. Update all occurrences including logo text, metadata, page titles, navigation labels, footer content, SEO tags, Open Graph tags, favicon references, authentication pages, dashboard references, API responses, notifications, emails, and all user-facing content.
+
+Keep the Hero Section exactly as it is. Do not modify its layout, typography, spacing, animations, images, CTA buttons, content structure, or responsiveness. The hero section must remain identical to the current implementation.
+
+Redesign the entire website UI while maintaining a modern SaaS appearance. Replace the current white + blue-700 theme with a premium and visually appealing design system. Use a dark modern palette with elegant gradients, glassmorphism effects, smooth transitions, subtle shadows, rounded corners, improved typography hierarchy, and enhanced visual depth. Create a consistent design language across all pages.
+
+Redesign the navigation bar, feature sections, pricing section, testimonials, FAQ, contact section, dashboard components, cards, forms, buttons, modals, and loading states. Improve spacing, visual hierarchy, and user experience throughout the platform.
+
+Completely redesign the footer with a premium multi-column layout containing:
+
+Convofy branding and short description
+Product links
+Resources section
+Company section
+Social media links
+Contact information
+Copyright section
+Privacy Policy and Terms links
+
+Remove the Admin Page entirely from the application. Delete its routes, navigation items, permissions, components, API integrations, database references, and any unused code related to admin functionality.
+
+Ensure clean code, optimized performance, accessibility compliance, SEO optimization, smooth animations, and production-ready quality throughout the Convofy website.
