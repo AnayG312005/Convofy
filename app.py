@@ -8,8 +8,12 @@ from werkzeug.utils import secure_filename
 import os
 import plotly.express as px
 import numpy as np
-from tensorflow.keras.preprocessing import image
-import tensorflow as tf
+try:
+    from tensorflow.keras.preprocessing import image
+    import tensorflow as tf
+    TF_AVAILABLE = True
+except ImportError:
+    TF_AVAILABLE = False
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
 import numpy as np,pandas as pd
@@ -555,4 +559,4 @@ def cataract():
 
 if __name__ == '__main__':
     create_tables()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
