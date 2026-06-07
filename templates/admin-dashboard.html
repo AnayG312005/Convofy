@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convofy — Admin Dashboard</title>
+    <link rel="icon" href="/static/images/heart-pulse-solid.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .admin-page { max-width: 1200px; margin: 100px auto 60px; padding: 0 20px; }
+        .admin-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; margin-bottom: 35px; }
+        .admin-header h1 { font-size: 2rem; color: #fff; }
+        .admin-header h1 span { color: #00c9a7; }
+        .admin-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 30px; }
+        .admin-nav a { padding: 9px 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.88rem; transition: all 0.2s; }
+        .admin-nav a:hover, .admin-nav a.active { background: rgba(0,201,167,0.15); border-color: rgba(0,201,167,0.3); color: #00c9a7; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; margin-bottom: 35px; }
+        .stat-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; position: relative; overflow: hidden; }
+        .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+        .stat-card.teal::before { background:linear-gradient(90deg,#00c9a7,#0a5c52); }
+        .stat-card.blue::before { background:linear-gradient(90deg,#667eea,#764ba2); }
+        .stat-card.orange::before { background:linear-gradient(90deg,#f6ad55,#ed8936); }
+        .stat-card.red::before { background:linear-gradient(90deg,#fc5c7d,#6a3093); }
+        .stat-card.green::before { background:linear-gradient(90deg,#56ab2f,#a8e063); }
+        .stat-icon { font-size: 1.5rem; margin-bottom: 10px; }
+        .stat-num { font-size: 2rem; font-weight: 700; color: #fff; line-height: 1; }
+        .stat-label { color: rgba(255,255,255,0.5); font-size: 0.82rem; margin-top: 5px; }
+        .content-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        @media(max-width:800px) { .content-grid { grid-template-columns: 1fr; } }
+        .admin-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 22px; }
+        .admin-card h3 { color: #00c9a7; font-size: 1rem; margin: 0 0 18px; display: flex; align-items: center; gap: 8px; }
+        .user-row { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 10px; margin-bottom: 8px; transition: background 0.2s; }
+        .user-row:hover { background: rgba(255,255,255,0.04); }
+        .user-av { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+        .user-av.doc { background: linear-gradient(135deg,#667eea,#764ba2); }
+        .user-av.pat { background: linear-gradient(135deg,#00c9a7,#0a5c52); }
+        .user-info { flex: 1; }
+        .user-info .uname { color: #fff; font-size: 0.9rem; font-weight: 600; }
+        .user-info .utype { color: rgba(255,255,255,0.45); font-size: 0.78rem; }
+        .user-date { color: rgba(255,255,255,0.35); font-size: 0.75rem; }
+        .log-row { display: flex; gap: 12px; align-items: flex-start; padding: 10px; border-radius: 8px; margin-bottom: 6px; }
+        .log-row:hover { background: rgba(255,255,255,0.03); }
+        .log-action { padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; flex-shrink: 0; }
+        .log-action.login { background: rgba(0,201,167,0.15); color: #00c9a7; }
+        .log-action.register { background: rgba(102,126,234,0.15); color: #667eea; }
+        .log-action.other { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.55); }
+        .log-details { flex: 1; color: rgba(255,255,255,0.6); font-size: 0.82rem; }
+        .log-time { color: rgba(255,255,255,0.3); font-size: 0.75rem; flex-shrink: 0; }
+        .badge { padding: 3px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+        .badge.doc { background: rgba(102,126,234,0.2); color: #667eea; }
+        .badge.pat { background: rgba(0,201,167,0.15); color: #00c9a7; }
+        .badge.admin { background: rgba(255,193,7,0.2); color: #ffc107; }
+    </style>
+</head>
+<body>
+<header class="header">
+    <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
+    <nav class="navbar">
+        <a href="{{url_for('index')}}">Home</a>
+        <a href="{{url_for('admin_dashboard')}}" style="color:#00c9a7">Admin</a>
+        <a href="{{url_for('admin_blog')}}">Blog CMS</a>
+        <a href="{{url_for('admin_users')}}">Users</a>
+        <a href="{{url_for('profile')}}"><i class="fas fa-user"></i></a>
+        <a href="{{url_for('logout')}}">Logout</a>
+    </nav>
+    <div id="menu-btn" class="fas fa-bars"></div>
+</header>
+
+<div class="admin-page">
+    {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}{% for cat, msg in messages %}
+    <div style="padding:12px 18px; background:rgba(0,201,167,0.1); border:1px solid rgba(0,201,167,0.25); border-radius:10px; color:#00c9a7; margin-bottom:20px; font-size:0.9rem;">{{ msg }}</div>
+    {% endfor %}{% endif %}{% endwith %}
+
+    <div class="admin-header">
+        <div>
+            <h1>Admin <span>Dashboard</span></h1>
+            <p style="color:rgba(255,255,255,0.5); font-size:0.9rem; margin-top:4px;">Platform overview and management — Convofy Healthcare</p>
+        </div>
+        <a href="{{ url_for('admin_blog_new') }}" style="padding:10px 20px; background:linear-gradient(135deg,#00c9a7,#0a5c52); border-radius:10px; color:#fff; text-decoration:none; font-size:0.9rem; font-weight:600;">
+            <i class="fas fa-plus"></i> New Post
+        </a>
+    </div>
+
+    <div class="admin-nav">
+        <a href="{{ url_for('admin_dashboard') }}" class="active"><i class="fas fa-tachometer-alt"></i> Overview</a>
+        <a href="{{ url_for('admin_blog') }}"><i class="fas fa-newspaper"></i> Blog CMS</a>
+        <a href="{{ url_for('admin_users') }}"><i class="fas fa-users"></i> Users</a>
+        <a href="{{ url_for('blog') }}" target="_blank"><i class="fas fa-external-link-alt"></i> View Blog</a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card teal">
+            <div class="stat-icon" style="color:#00c9a7;"><i class="fas fa-users"></i></div>
+            <div class="stat-num">{{ stats.total_users }}</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card blue">
+            <div class="stat-icon" style="color:#667eea;"><i class="fas fa-user-md"></i></div>
+            <div class="stat-num">{{ stats.total_doctors }}</div>
+            <div class="stat-label">Doctors</div>
+        </div>
+        <div class="stat-card teal">
+            <div class="stat-icon" style="color:#00c9a7;"><i class="fas fa-user"></i></div>
+            <div class="stat-num">{{ stats.total_patients }}</div>
+            <div class="stat-label">Patients</div>
+        </div>
+        <div class="stat-card orange">
+            <div class="stat-icon" style="color:#f6ad55;"><i class="fas fa-calendar-check"></i></div>
+            <div class="stat-num">{{ stats.total_appointments }}</div>
+            <div class="stat-label">Appointments</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-icon" style="color:#fc5c7d;"><i class="fas fa-clock"></i></div>
+            <div class="stat-num">{{ stats.pending_appointments }}</div>
+            <div class="stat-label">Pending</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-icon" style="color:#56ab2f;"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-num">{{ stats.approved_appointments }}</div>
+            <div class="stat-label">Approved</div>
+        </div>
+        <div class="stat-card blue">
+            <div class="stat-icon" style="color:#667eea;"><i class="fas fa-newspaper"></i></div>
+            <div class="stat-num">{{ stats.total_blog_posts }}</div>
+            <div class="stat-label">Blog Posts</div>
+        </div>
+        <div class="stat-card teal">
+            <div class="stat-icon" style="color:#00c9a7;"><i class="fas fa-file-medical"></i></div>
+            <div class="stat-num">{{ stats.total_reports }}</div>
+            <div class="stat-label">Reports Uploaded</div>
+        </div>
+        <div class="stat-card orange">
+            <div class="stat-icon" style="color:#f6ad55;"><i class="fas fa-robot"></i></div>
+            <div class="stat-num">{{ stats.total_ai_chats }}</div>
+            <div class="stat-label">AI Queries</div>
+        </div>
+        <div class="stat-card blue">
+            <div class="stat-icon" style="color:#667eea;"><i class="fas fa-comments"></i></div>
+            <div class="stat-num">{{ stats.total_messages }}</div>
+            <div class="stat-label">Messages Sent</div>
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <div class="admin-card">
+            <h3><i class="fas fa-user-plus"></i> Recent Users</h3>
+            {% for u in recent_users %}
+            <div class="user-row">
+                <div class="user-av {{ 'doc' if u.type_of_doctor else 'pat' }}">
+                    <i class="fas {{ 'fa-user-md' if u.type_of_doctor else 'fa-user' }}"></i>
+                </div>
+                <div class="user-info">
+                    <div class="uname">{{ u.username }}
+                        {% if u.is_admin %}<span class="badge admin">Admin</span>{% endif %}
+                        {% if u.type_of_doctor %}<span class="badge doc">{{ u.type_of_doctor }}</span>{% else %}<span class="badge pat">Patient</span>{% endif %}
+                    </div>
+                    <div class="utype">{{ u.email }}</div>
+                </div>
+                <div class="user-date">{{ u.created_at.strftime('%d %b') if u.created_at else '' }}</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="admin-card">
+            <h3><i class="fas fa-history"></i> Recent Activity Logs</h3>
+            {% for log in recent_logs %}
+            <div class="log-row">
+                <span class="log-action {{ 'login' if log.action == 'login' else 'register' if log.action == 'register' else 'other' }}">{{ log.action }}</span>
+                <div class="log-details">
+                    {% if log.details %}{{ log.details[:60] }}{% if log.details|length > 60 %}...{% endif %}{% endif %}
+                </div>
+                <div class="log-time">{{ log.timestamp.strftime('%H:%M') }}</div>
+            </div>
+            {% else %}
+            <div style="text-align:center; padding:30px; color:rgba(255,255,255,0.35); font-size:0.9rem;">
+                <i class="fas fa-history" style="font-size:1.5rem; margin-bottom:8px; display:block;"></i>
+                No activity logs yet.
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>document.getElementById('menu-btn')?.addEventListener('click',()=>document.querySelector('.navbar')?.classList.toggle('active'));</script>
+</body>
+</html>

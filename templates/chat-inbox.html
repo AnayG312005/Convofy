@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convofy — Messages</title>
+    <link rel="icon" href="/static/images/heart-pulse-solid.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .inbox-container { max-width: 900px; margin: 100px auto 60px; padding: 0 20px; }
+        .page-title { display: flex; align-items: center; gap: 12px; margin-bottom: 30px; }
+        .page-title h1 { font-size: 1.8rem; color: #fff; }
+        .page-title h1 span { color: #00c9a7; }
+        .inbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+        @media(max-width:768px) { .inbox-grid { grid-template-columns: 1fr; } }
+        .section-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; }
+        .section-card h3 { color: #00c9a7; font-size: 1rem; margin: 0 0 15px; display: flex; align-items: center; gap: 8px; }
+        .conv-item { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 12px; text-decoration: none; transition: all 0.2s; margin-bottom: 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+        .conv-item:hover { background: rgba(0,201,167,0.08); border-color: rgba(0,201,167,0.2); transform: translateX(3px); }
+        .conv-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg,#00c9a7,#0a5c52); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem; flex-shrink: 0; }
+        .conv-avatar.doc { background: linear-gradient(135deg,#667eea,#764ba2); }
+        .conv-info { flex: 1; min-width: 0; }
+        .conv-info .name { color: #fff; font-weight: 600; font-size: 0.95rem; }
+        .conv-info .preview { color: rgba(255,255,255,0.5); font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+        .conv-info .specialty { color: #00c9a7; font-size: 0.75rem; margin-top: 2px; }
+        .conv-meta { text-align: right; flex-shrink: 0; }
+        .conv-meta .time { color: rgba(255,255,255,0.4); font-size: 0.75rem; }
+        .unread-badge { background: #00c9a7; color: #0a0b17; border-radius: 50%; width: 20px; height: 20px; font-size: 0.7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 4px; margin-left: auto; }
+        .contact-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-radius: 10px; text-decoration: none; transition: all 0.2s; margin-bottom: 8px; }
+        .contact-item:hover { background: rgba(0,201,167,0.1); }
+        .contact-name { color: #fff; font-size: 0.9rem; }
+        .contact-type { color: #00c9a7; font-size: 0.75rem; }
+        .start-chat-btn { padding: 7px 14px; background: rgba(0,201,167,0.15); border: 1px solid rgba(0,201,167,0.3); border-radius: 8px; color: #00c9a7; font-size: 0.8rem; text-decoration: none; transition: all 0.2s; }
+        .start-chat-btn:hover { background: rgba(0,201,167,0.25); }
+        .empty-msg { text-align: center; padding: 30px; color: rgba(255,255,255,0.4); font-size: 0.9rem; }
+        .empty-msg i { font-size: 2rem; margin-bottom: 10px; display: block; color: rgba(0,201,167,0.3); }
+    </style>
+</head>
+<body>
+<header class="header">
+    <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
+    <nav class="navbar">
+        <a href="{{url_for('index')}}">Home</a>
+        <a href="{{url_for('ai_chat')}}">AI Chat</a>
+        <a href="{{url_for('chat_inbox')}}" style="color:#00c9a7">Messages</a>
+        <a href="{{url_for('scan_reports')}}">Reports</a>
+        <a href="{{url_for('blog')}}">Blog</a>
+        <a href="{{url_for('profile')}}"><i class="fas fa-user"></i></a>
+        <a href="{{url_for('logout')}}">Logout</a>
+    </nav>
+    <div id="menu-btn" class="fas fa-bars"></div>
+</header>
+
+<div class="inbox-container">
+    <div class="page-title">
+        <i class="fas fa-comments" style="color:#00c9a7; font-size:1.8rem;"></i>
+        <h1>My <span>Messages</span></h1>
+    </div>
+
+    <div class="inbox-grid">
+        <div class="section-card">
+            <h3><i class="fas fa-history"></i> Recent Conversations</h3>
+            {% if partners %}
+                {% for p in partners %}
+                <a href="{{ url_for('chat_thread', partner_id=p.user.id) }}" class="conv-item">
+                    <div class="conv-avatar {{ 'doc' if p.user.type_of_doctor else '' }}">
+                        <i class="fas {{ 'fa-user-md' if p.user.type_of_doctor else 'fa-user' }}"></i>
+                    </div>
+                    <div class="conv-info">
+                        <div class="name">{{ 'Dr. ' if p.user.type_of_doctor else '' }}{{ p.user.username }}</div>
+                        {% if p.user.type_of_doctor %}<div class="specialty">{{ p.user.type_of_doctor }}</div>{% endif %}
+                        {% if p.last_msg %}
+                        <div class="preview">
+                            {% if p.last_msg.sender_id == user.id %}You: {% endif %}
+                            {{ p.last_msg.message[:50] }}{% if p.last_msg.message|length > 50 %}...{% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="conv-meta">
+                        {% if p.last_msg %}<div class="time">{{ p.last_msg.timestamp.strftime('%H:%M') }}</div>{% endif %}
+                        {% if p.unread > 0 %}<div class="unread-badge">{{ p.unread }}</div>{% endif %}
+                    </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <div class="empty-msg">
+                    <i class="fas fa-comment-slash"></i>
+                    No conversations yet. Start chatting with a doctor or patient below!
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="section-card">
+            <h3><i class="fas fa-address-book"></i> 
+                {{ 'Available Patients' if user.type_of_doctor else 'Available Doctors' }}
+            </h3>
+            {% if available_contacts %}
+                {% for contact in available_contacts %}
+                <div class="contact-item">
+                    <div class="conv-avatar {{ 'doc' if contact.type_of_doctor else '' }}">
+                        <i class="fas {{ 'fa-user-md' if contact.type_of_doctor else 'fa-user' }}"></i>
+                    </div>
+                    <div style="flex:1;">
+                        <div class="contact-name">{{ 'Dr. ' if contact.type_of_doctor else '' }}{{ contact.username }}</div>
+                        {% if contact.type_of_doctor %}<div class="contact-type">{{ contact.type_of_doctor }}</div>{% endif %}
+                    </div>
+                    <a href="{{ url_for('chat_thread', partner_id=contact.id) }}" class="start-chat-btn">
+                        <i class="fas fa-comment"></i> Chat
+                    </a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-msg">
+                    <i class="fas fa-users-slash"></i>
+                    No {{ 'patients' if user.type_of_doctor else 'doctors' }} available yet.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="margin-top:25px; padding:18px; background:rgba(0,201,167,0.05); border:1px solid rgba(0,201,167,0.15); border-radius:12px;">
+        <p style="color:rgba(255,255,255,0.6); font-size:0.85rem; margin:0;">
+            <i class="fas fa-shield-alt" style="color:#00c9a7; margin-right:8px;"></i>
+            <strong style="color:#00c9a7;">Privacy Notice:</strong> All messages are stored securely and are only accessible to the sender and recipient. Messages are end-to-end encrypted in transit.
+        </p>
+    </div>
+</div>
+
+<script src="/static/js/script.js"></script>
+</body>
+</html>

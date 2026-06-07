@@ -1,0 +1,23 @@
+Here's a 250-word development prompt you can give to your AI developer, Replit Agent, Cursor, or development team:
+
+Build all Convofy healthcare platform features as fully functional production-ready modules with complete frontend, backend, database integration, authentication, security, API connections, dashboards, notifications, and responsive UI. Every feature must work end-to-end with real user interactions, validation, storage, and retrieval.
+
+1. 24/7 AI Chat:
+   Develop an AI-powered health assistant capable of symptom analysis, health guidance, follow-up conversations, multilingual support, conversation history, emergency detection, and secure chat storage. Users should be able to start, continue, and review conversations anytime.
+
+2. Chat With Doctors:
+   Create a real-time messaging system where users can communicate with verified doctors. Include text messages, image sharing, file attachments, read receipts, typing indicators, notifications, chat history, and doctor availability status.
+
+3. Book Doctors:
+   Build a complete doctor appointment system with doctor profiles, specialties, search filters, availability calendars, appointment booking, rescheduling, cancellation, reminders, payment integration, and appointment history.
+
+4. Scan Reports:
+   Allow users to upload PDFs, lab reports, X-rays, prescriptions, and medical documents. Implement secure cloud storage, OCR extraction, AI report summaries, categorization, search functionality, and download options.
+
+5. Health Blogs:
+   Create a CMS-driven blog platform with categories, featured articles, search, comments, likes, bookmarks, sharing options, admin publishing tools, and SEO optimization.
+
+6. Privacy & Security:
+   Implement HIPAA-inspired security standards, encrypted data storage, secure authentication, role-based access control, audit logs, privacy settings, consent management, and account deletion.
+
+Ensure mobile responsiveness, dark/light mode, admin dashboard, analytics, error handling, performance optimization, and a polished modern healthcare UI. All features must be fully operational and production-ready with zero placeholder content.

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ post.title }} — Convofy</title>
+    <meta name="description" content="{{ post.excerpt or (post.content|striptags)[:160] }}">
+    <link rel="icon" href="/static/images/heart-pulse-solid.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .post-page { max-width: 1150px; margin: 100px auto 60px; padding: 0 20px; }
+        .post-layout { display: grid; grid-template-columns: 1fr 300px; gap: 35px; }
+        @media(max-width:900px) { .post-layout { grid-template-columns: 1fr; } }
+        .breadcrumb { display: flex; gap: 8px; align-items: center; margin-bottom: 25px; font-size: 0.85rem; color: rgba(255,255,255,0.4); }
+        .breadcrumb a { color: #00c9a7; text-decoration: none; }
+        .breadcrumb a:hover { text-decoration: underline; }
+        .post-header { margin-bottom: 30px; }
+        .cat-tag { display: inline-block; padding: 5px 14px; background: rgba(0,201,167,0.12); border: 1px solid rgba(0,201,167,0.25); border-radius: 20px; color: #00c9a7; font-size: 0.8rem; font-weight: 600; margin-bottom: 15px; text-decoration: none; }
+        .post-header h1 { font-size: 2.2rem; color: #fff; line-height: 1.3; margin-bottom: 15px; }
+        .post-meta-row { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.07); margin-bottom: 20px; }
+        .meta-item { color: rgba(255,255,255,0.5); font-size: 0.85rem; display: flex; align-items: center; gap: 6px; }
+        .featured-img { width: 100%; height: 300px; object-fit: cover; border-radius: 16px; margin-bottom: 30px; }
+        .featured-img-placeholder { width: 100%; height: 240px; background: linear-gradient(135deg,rgba(0,201,167,0.1),rgba(10,92,82,0.15)); border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 4rem; color: rgba(0,201,167,0.3); margin-bottom: 30px; }
+        .post-content { color: rgba(255,255,255,0.85); line-height: 1.8; font-size: 0.97rem; }
+        .post-content h2 { color: #00c9a7; font-size: 1.4rem; margin: 30px 0 12px; }
+        .post-content h3 { color: #fff; font-size: 1.15rem; margin: 22px 0 10px; }
+        .post-content p { margin-bottom: 16px; }
+        .post-content ul, .post-content ol { padding-left: 20px; margin-bottom: 16px; }
+        .post-content li { margin-bottom: 8px; }
+        .post-content strong { color: #00c9a7; }
+        .post-content a { color: #00c9a7; }
+        .post-actions { display: flex; gap: 12px; align-items: center; padding: 20px 0; border-top: 1px solid rgba(255,255,255,0.07); border-bottom: 1px solid rgba(255,255,255,0.07); margin: 30px 0; flex-wrap: wrap; }
+        .action-btn { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 10px; cursor: pointer; font-size: 0.9rem; transition: all 0.2s; border: none; font-family: inherit; }
+        .like-btn { background: rgba(255,99,132,0.12); border: 1px solid rgba(255,99,132,0.25); color: #ff6384; }
+        .like-btn:hover, .like-btn.liked { background: rgba(255,99,132,0.2); }
+        .bookmark-btn { background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.2); color: #ffc107; }
+        .bookmark-btn:hover, .bookmark-btn.bookmarked { background: rgba(255,193,7,0.2); }
+        .share-btn { background: rgba(102,126,234,0.12); border: 1px solid rgba(102,126,234,0.25); color: #667eea; }
+        .share-btn:hover { background: rgba(102,126,234,0.22); }
+        .comments-section h2 { color: #fff; font-size: 1.3rem; margin-bottom: 20px; }
+        .comment-form { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; margin-bottom: 25px; }
+        .comment-form textarea { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 16px; color: #fff; font-family: inherit; font-size: 0.9rem; resize: vertical; min-height: 90px; outline: none; box-sizing: border-box; }
+        .comment-form textarea:focus { border-color: rgba(0,201,167,0.5); }
+        .comment-submit { margin-top: 12px; padding: 10px 22px; background: linear-gradient(135deg,#00c9a7,#0a5c52); border: none; border-radius: 10px; color: #fff; cursor: pointer; font-size: 0.9rem; font-weight: 600; }
+        .comment-item { display: flex; gap: 14px; padding: 16px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.06); }
+        .comment-avatar { width: 38px; height: 38px; border-radius: 50%; background: linear-gradient(135deg,#667eea,#764ba2); display: flex; align-items: center; justify-content: center; font-size: 0.95rem; flex-shrink: 0; }
+        .comment-body .username { color: #00c9a7; font-weight: 600; font-size: 0.9rem; }
+        .comment-body .ctime { color: rgba(255,255,255,0.35); font-size: 0.78rem; margin-left: 8px; }
+        .comment-body .ctext { color: rgba(255,255,255,0.8); font-size: 0.88rem; margin-top: 6px; line-height: 1.5; }
+        .del-comment { padding: 4px 10px; background: rgba(220,53,69,0.1); border: 1px solid rgba(220,53,69,0.2); border-radius: 6px; color: #ff6b6b; cursor: pointer; font-size: 0.75rem; margin-top: 6px; }
+        .sidebar-sticky { position: sticky; top: 100px; }
+        .sidebar-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; margin-bottom: 20px; }
+        .sidebar-card h3 { color: #00c9a7; font-size: 0.9rem; margin: 0 0 15px; }
+        .related-post { display: flex; gap: 10px; margin-bottom: 12px; text-decoration: none; }
+        .related-post:last-child { margin-bottom: 0; }
+        .rel-img { width: 60px; height: 55px; background: linear-gradient(135deg,rgba(0,201,167,0.1),rgba(10,92,82,0.15)); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: rgba(0,201,167,0.5); flex-shrink: 0; }
+        .rel-info .rel-title { color: rgba(255,255,255,0.85); font-size: 0.85rem; line-height: 1.4; transition: color 0.2s; }
+        .related-post:hover .rel-title { color: #00c9a7; }
+        .rel-info .rel-meta { color: rgba(255,255,255,0.4); font-size: 0.75rem; margin-top: 3px; }
+    </style>
+</head>
+<body>
+<header class="header">
+    <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
+    <nav class="navbar">
+        <a href="{{url_for('index')}}">Home</a>
+        {% if username %}
+        <a href="{{url_for('ai_chat')}}">AI Chat</a>
+        <a href="{{url_for('chat_inbox')}}">Messages</a>
+        <a href="{{url_for('scan_reports')}}">Reports</a>
+        {% endif %}
+        <a href="{{url_for('blog')}}" style="color:#00c9a7">Blog</a>
+        {% if username %}
+        <a href="{{url_for('profile')}}"><i class="fas fa-user"></i></a>
+        <a href="{{url_for('logout')}}">Logout</a>
+        {% else %}
+        <a href="{{url_for('login')}}">Login</a>
+        {% endif %}
+    </nav>
+    <div id="menu-btn" class="fas fa-bars"></div>
+</header>
+
+<div class="post-page">
+    <div class="breadcrumb">
+        <a href="{{ url_for('blog') }}">Blog</a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="{{ url_for('blog', category=post.category) }}">{{ post.category }}</a>
+        <i class="fas fa-chevron-right"></i>
+        <span style="color:rgba(255,255,255,0.6);">{{ post.title[:40] }}{% if post.title|length > 40 %}...{% endif %}</span>
+    </div>
+
+    <div class="post-layout">
+        <div>
+            <div class="post-header">
+                <a href="{{ url_for('blog', category=post.category) }}" class="cat-tag">{{ post.category }}</a>
+                <h1>{{ post.title }}</h1>
+                <div class="post-meta-row">
+                    <span class="meta-item"><i class="fas fa-calendar-alt"></i> {{ post.created_at.strftime('%d %B %Y') }}</span>
+                    <span class="meta-item"><i class="fas fa-clock"></i> {{ post.read_time }} min read</span>
+                    <span class="meta-item"><i class="fas fa-eye"></i> {{ post.views }} views</span>
+                    <span class="meta-item"><i class="fas fa-comments"></i> {{ post.comments|length }} comments</span>
+                    {% if post.author %}<span class="meta-item"><i class="fas fa-user-md"></i> Dr. {{ post.author.username }}</span>{% endif %}
+                </div>
+            </div>
+
+            {% if post.featured_image %}
+            <img src="/static/{{ post.featured_image }}" alt="{{ post.title }}" class="featured-img">
+            {% else %}
+            <div class="featured-img-placeholder"><i class="fas fa-newspaper"></i></div>
+            {% endif %}
+
+            <div class="post-content">{{ post.content|safe }}</div>
+
+            <div class="post-actions">
+                <button class="action-btn like-btn {{ 'liked' if liked else '' }}" id="likeBtn" onclick="toggleLike()">
+                    <i class="fas fa-heart"></i>
+                    <span id="likeCount">{{ like_count }}</span> Likes
+                </button>
+                <button class="action-btn bookmark-btn {{ 'bookmarked' if bookmarked else '' }}" id="bookmarkBtn" onclick="toggleBookmark()">
+                    <i class="fas fa-bookmark"></i>
+                    <span id="bookmarkText">{{ 'Bookmarked' if bookmarked else 'Bookmark' }}</span>
+                </button>
+                <button class="action-btn share-btn" onclick="sharePost()">
+                    <i class="fas fa-share-alt"></i> Share
+                </button>
+            </div>
+
+            <div class="comments-section">
+                <h2><i class="fas fa-comments" style="color:#00c9a7; margin-right:10px;"></i>{{ post.comments|length }} Comments</h2>
+                {% if username %}
+                <div class="comment-form">
+                    <form method="POST" action="{{ url_for('blog_comment', post_id=post.id) }}">
+                        <textarea name="content" placeholder="Share your thoughts or health experience..." required></textarea>
+                        <button type="submit" class="comment-submit">Post Comment <i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+                {% else %}
+                <div style="padding:15px; background:rgba(0,201,167,0.06); border:1px solid rgba(0,201,167,0.15); border-radius:10px; margin-bottom:20px; text-align:center; color:rgba(255,255,255,0.65); font-size:0.9rem;">
+                    <a href="{{ url_for('login') }}" style="color:#00c9a7;">Log in</a> to leave a comment.
+                </div>
+                {% endif %}
+
+                {% for comment in post.comments %}
+                <div class="comment-item">
+                    <div class="comment-avatar"><i class="fas fa-user"></i></div>
+                    <div class="comment-body" style="flex:1;">
+                        <span class="username">{{ comment.user.username }}</span>
+                        <span class="ctime">{{ comment.created_at.strftime('%d %b %Y at %H:%M') }}</span>
+                        <div class="ctext">{{ comment.content }}</div>
+                        {% if user and (user.id == comment.user_id or user.is_admin) %}
+                        <form method="POST" action="{{ url_for('delete_comment', post_id=post.id, comment_id=comment.id) }}" onsubmit="return confirm('Delete this comment?')">
+                            <button type="submit" class="del-comment"><i class="fas fa-trash"></i> Delete</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% else %}
+                <div style="text-align:center; padding:30px; color:rgba(255,255,255,0.4); font-size:0.9rem;">
+                    <i class="fas fa-comment-dots" style="font-size:1.5rem; margin-bottom:8px; display:block; color:rgba(0,201,167,0.2);"></i>
+                    Be the first to comment on this article!
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="sidebar-sticky">
+            {% if related %}
+            <div class="sidebar-card">
+                <h3><i class="fas fa-newspaper"></i> Related Articles</h3>
+                {% for rel in related %}
+                <a href="{{ url_for('blog_post', slug=rel.slug) }}" class="related-post">
+                    <div class="rel-img"><i class="fas fa-file-medical-alt"></i></div>
+                    <div class="rel-info">
+                        <div class="rel-title">{{ rel.title }}</div>
+                        <div class="rel-meta"><i class="fas fa-clock"></i> {{ rel.read_time }} min read</div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <div class="sidebar-card" style="background:rgba(0,201,167,0.06); border-color:rgba(0,201,167,0.2);">
+                <h3><i class="fas fa-robot"></i> AI Health Chat</h3>
+                <p style="color:rgba(255,255,255,0.65); font-size:0.85rem; line-height:1.6; margin-bottom:15px;">Questions about this topic? Ask our AI assistant for personalised guidance.</p>
+                {% if username %}
+                <a href="{{ url_for('ai_chat') }}" style="display:block; text-align:center; padding:10px; background:linear-gradient(135deg,#00c9a7,#0a5c52); border-radius:10px; color:#fff; text-decoration:none; font-size:0.9rem; font-weight:600;">Ask AI Assistant</a>
+                {% else %}
+                <a href="{{ url_for('login') }}" style="display:block; text-align:center; padding:10px; background:linear-gradient(135deg,#00c9a7,#0a5c52); border-radius:10px; color:#fff; text-decoration:none; font-size:0.9rem; font-weight:600;">Login to Chat</a>
+                {% endif %}
+            </div>
+
+            <div class="sidebar-card">
+                <h3><i class="fas fa-calendar-check"></i> Book a Doctor</h3>
+                <p style="color:rgba(255,255,255,0.65); font-size:0.85rem; line-height:1.6; margin-bottom:15px;">Need professional medical advice on topics in this article?</p>
+                {% if username %}
+                <a href="{{ url_for('book_appointment') }}" style="display:block; text-align:center; padding:10px; background:rgba(0,201,167,0.15); border:1px solid rgba(0,201,167,0.3); border-radius:10px; color:#00c9a7; text-decoration:none; font-size:0.9rem;">Book Appointment</a>
+                {% else %}
+                <a href="{{ url_for('login') }}" style="display:block; text-align:center; padding:10px; background:rgba(0,201,167,0.15); border:1px solid rgba(0,201,167,0.3); border-radius:10px; color:#00c9a7; text-decoration:none; font-size:0.9rem;">Login to Book</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const postId = {{ post.id }};
+let isLiked = {{ 'true' if liked else 'false' }};
+let isBookmarked = {{ 'true' if bookmarked else 'false' }};
+
+async function toggleLike() {
+    {% if not username %}window.location.href = '{{ url_for("login") }}'; return;{% endif %}
+    const res = await fetch(`/blog/${postId}/like`, {method:'POST', headers:{'Content-Type':'application/json'}});
+    const data = await res.json();
+    isLiked = data.liked;
+    document.getElementById('likeCount').textContent = data.count;
+    document.getElementById('likeBtn').classList.toggle('liked', data.liked);
+}
+
+async function toggleBookmark() {
+    {% if not username %}window.location.href = '{{ url_for("login") }}'; return;{% endif %}
+    const res = await fetch(`/blog/${postId}/bookmark`, {method:'POST', headers:{'Content-Type':'application/json'}});
+    const data = await res.json();
+    isBookmarked = data.bookmarked;
+    document.getElementById('bookmarkBtn').classList.toggle('bookmarked', data.bookmarked);
+    document.getElementById('bookmarkText').textContent = data.bookmarked ? 'Bookmarked' : 'Bookmark';
+}
+
+function sharePost() {
+    if (navigator.share) {
+        navigator.share({title: '{{ post.title }}', url: window.location.href});
+    } else {
+        navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied to clipboard!'));
+    }
+}
+
+document.getElementById('menu-btn')?.addEventListener('click', () => {
+    document.querySelector('.navbar')?.classList.toggle('active');
+});
+</script>
+</body>
+</html>

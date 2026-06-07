@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convofy — Chat with {{ 'Dr. ' if partner.type_of_doctor else '' }}{{ partner.username }}</title>
+    <link rel="icon" href="/static/images/heart-pulse-solid.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .chat-page { max-width: 860px; margin: 90px auto 40px; padding: 0 20px; }
+        .chat-topbar { display: flex; align-items: center; gap: 14px; padding: 16px 22px; background: rgba(255,255,255,0.05); border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 16px; }
+        .partner-avatar { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg,#667eea,#764ba2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+        .partner-info h3 { color: #fff; font-size: 1rem; margin: 0; }
+        .partner-info p { color: #00c9a7; font-size: 0.8rem; margin: 0; }
+        .back-link { margin-left: auto; color: rgba(255,255,255,0.5); text-decoration: none; padding: 8px 14px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-size: 0.85rem; transition: all 0.2s; }
+        .back-link:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .messages-wrap { height: 480px; overflow-y: auto; padding: 18px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid rgba(255,255,255,0.07); margin-bottom: 16px; scroll-behavior: smooth; }
+        .messages-wrap::-webkit-scrollbar { width: 5px; }
+        .messages-wrap::-webkit-scrollbar-thumb { background: rgba(0,201,167,0.3); border-radius: 3px; }
+        .msg-row { display: flex; gap: 10px; margin-bottom: 14px; animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        .msg-row.mine { flex-direction: row-reverse; }
+        .avatar-sm { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; flex-shrink: 0; }
+        .avatar-sm.them { background: linear-gradient(135deg,#667eea,#764ba2); }
+        .avatar-sm.me { background: linear-gradient(135deg,#00c9a7,#0a5c52); }
+        .bubble { max-width: 70%; padding: 11px 16px; border-radius: 16px; font-size: 0.88rem; line-height: 1.55; word-break: break-word; }
+        .bubble.them { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); border-bottom-left-radius: 4px; }
+        .bubble.me { background: linear-gradient(135deg,rgba(0,201,167,0.25),rgba(0,201,167,0.15)); border: 1px solid rgba(0,201,167,0.3); color: rgba(255,255,255,0.95); border-bottom-right-radius: 4px; }
+        .btime { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-top: 4px; }
+        .mine .btime { text-align: right; }
+        .input-row { display: flex; gap: 10px; }
+        .input-row input { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); border-radius: 12px; padding: 13px 16px; color: #fff; font-family: inherit; font-size: 0.9rem; outline: none; transition: border-color 0.3s; }
+        .input-row input:focus { border-color: rgba(0,201,167,0.5); }
+        .input-row button { padding: 13px 20px; background: linear-gradient(135deg,#00c9a7,#0a5c52); border: none; border-radius: 12px; color: #fff; cursor: pointer; font-size: 1rem; transition: all 0.2s; }
+        .input-row button:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(0,201,167,0.4); }
+        .date-divider { text-align: center; margin: 15px 0; }
+        .date-divider span { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.4); font-size: 0.75rem; padding: 4px 12px; border-radius: 10px; }
+        .empty-chat { text-align: center; padding: 60px 20px; color: rgba(255,255,255,0.4); }
+        .empty-chat i { font-size: 2.5rem; color: rgba(0,201,167,0.25); margin-bottom: 12px; display: block; }
+    </style>
+</head>
+<body>
+<header class="header">
+    <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
+    <nav class="navbar">
+        <a href="{{url_for('index')}}">Home</a>
+        <a href="{{url_for('ai_chat')}}">AI Chat</a>
+        <a href="{{url_for('chat_inbox')}}" style="color:#00c9a7">Messages</a>
+        <a href="{{url_for('scan_reports')}}">Reports</a>
+        <a href="{{url_for('blog')}}">Blog</a>
+        <a href="{{url_for('profile')}}"><i class="fas fa-user"></i></a>
+        <a href="{{url_for('logout')}}">Logout</a>
+    </nav>
+    <div id="menu-btn" class="fas fa-bars"></div>
+</header>
+
+<div class="chat-page">
+    <div class="chat-topbar">
+        <div class="partner-avatar">
+            <i class="fas {{ 'fa-user-md' if partner.type_of_doctor else 'fa-user' }}"></i>
+        </div>
+        <div class="partner-info">
+            <h3>{{ 'Dr. ' if partner.type_of_doctor else '' }}{{ partner.username }}</h3>
+            <p>{{ partner.type_of_doctor if partner.type_of_doctor else 'Patient' }}</p>
+        </div>
+        <a href="{{ url_for('chat_inbox') }}" class="back-link"><i class="fas fa-arrow-left"></i> Back</a>
+    </div>
+
+    <div class="messages-wrap" id="messagesWrap">
+        {% if not messages %}
+        <div class="empty-chat">
+            <i class="fas fa-comment-medical"></i>
+            <p>Start a conversation with {{ 'Dr. ' if partner.type_of_doctor else '' }}{{ partner.username }}</p>
+        </div>
+        {% endif %}
+        {% for msg in messages %}
+        <div class="msg-row {{ 'mine' if msg.sender_id == user.id else '' }}" data-id="{{ msg.id }}">
+            <div class="avatar-sm {{ 'me' if msg.sender_id == user.id else 'them' }}">
+                <i class="fas {{ 'fa-user' if msg.sender_id == user.id else ('fa-user-md' if partner.type_of_doctor else 'fa-user') }}"></i>
+            </div>
+            <div>
+                <div class="bubble {{ 'me' if msg.sender_id == user.id else 'them' }}">{{ msg.message }}</div>
+                <div class="btime">{{ msg.timestamp.strftime('%H:%M') }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="input-row">
+        <input type="text" id="msgInput" placeholder="Type a message... (Enter to send)" autocomplete="off">
+        <button onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<script>
+const wrap = document.getElementById('messagesWrap');
+const input = document.getElementById('msgInput');
+const userId = {{ user.id }};
+const partnerId = {{ partner.id }};
+
+let lastMsgId = {{ messages[-1].id if messages else 0 }};
+
+function scrollDown() { wrap.scrollTop = wrap.scrollHeight; }
+scrollDown();
+
+function appendMsg(msg) {
+    const isMine = msg.sender_id === userId;
+    const row = document.createElement('div');
+    row.className = `msg-row ${isMine ? 'mine' : ''}`;
+    row.dataset.id = msg.id;
+    row.innerHTML = `
+        <div class="avatar-sm ${isMine ? 'me' : 'them'}">
+            <i class="fas fa-user"></i>
+        </div>
+        <div>
+            <div class="bubble ${isMine ? 'me' : 'them'}">${escHtml(msg.message)}</div>
+            <div class="btime">${msg.timestamp}</div>
+        </div>`;
+    wrap.appendChild(row);
+    scrollDown();
+}
+
+function escHtml(text) {
+    const d = document.createElement('div');
+    d.appendChild(document.createTextNode(text));
+    return d.innerHTML;
+}
+
+async function sendMsg() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+    try {
+        const res = await fetch('/api/send-message', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({receiver_id: partnerId, message: text})
+        });
+        const data = await res.json();
+        appendMsg({...data, sender_id: userId});
+        lastMsgId = data.id;
+    } catch(e) { console.error(e); }
+}
+
+input.addEventListener('keydown', e => { if(e.key === 'Enter') { e.preventDefault(); sendMsg(); } });
+
+async function pollMessages() {
+    try {
+        const res = await fetch(`/api/get-messages?partner_id=${partnerId}&since_id=${lastMsgId}`);
+        const msgs = await res.json();
+        msgs.forEach(msg => {
+            if (msg.sender_id !== userId) {
+                appendMsg(msg);
+                lastMsgId = Math.max(lastMsgId, msg.id);
+            }
+        });
+    } catch(e) {}
+}
+setInterval(pollMessages, 2000);
+</script>
+</body>
+</html>

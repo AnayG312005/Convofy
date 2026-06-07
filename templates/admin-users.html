@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convofy — User Management</title>
+    <link rel="icon" href="/static/images/heart-pulse-solid.svg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/static/css/style.css">
+    <style>
+        .admin-page { max-width: 1200px; margin: 100px auto 60px; padding: 0 20px; }
+        .admin-header { margin-bottom: 30px; }
+        .admin-header h1 { font-size: 2rem; color: #fff; }
+        .admin-header h1 span { color: #00c9a7; }
+        .admin-nav { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 25px; }
+        .admin-nav a { padding: 9px 18px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.88rem; transition: all 0.2s; }
+        .admin-nav a:hover, .admin-nav a.active { background: rgba(0,201,167,0.15); border-color: rgba(0,201,167,0.3); color: #00c9a7; }
+        table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        th { color: rgba(255,255,255,0.5); font-size: 0.8rem; font-weight: 600; padding: 10px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.07); }
+        td { padding: 12px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); font-size: 0.88rem; color: rgba(255,255,255,0.8); }
+        tr:hover td { background: rgba(255,255,255,0.06); }
+        td:first-child { border-radius: 10px 0 0 10px; }
+        td:last-child { border-radius: 0 10px 10px 0; }
+        .badge { padding: 3px 10px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; }
+        .badge.doc { background: rgba(102,126,234,0.2); color: #667eea; }
+        .badge.pat { background: rgba(0,201,167,0.15); color: #00c9a7; }
+        .badge.admin { background: rgba(255,193,7,0.2); color: #ffc107; }
+        .btn-promote { padding: 5px 12px; background: rgba(255,193,7,0.1); border: 1px solid rgba(255,193,7,0.25); border-radius: 7px; color: #ffc107; cursor: pointer; font-size: 0.78rem; }
+    </style>
+</head>
+<body>
+<header class="header">
+    <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
+    <nav class="navbar">
+        <a href="{{url_for('index')}}">Home</a>
+        <a href="{{url_for('admin_dashboard')}}">Admin</a>
+        <a href="{{url_for('admin_blog')}}">Blog CMS</a>
+        <a href="{{url_for('admin_users')}}" style="color:#00c9a7">Users</a>
+        <a href="{{url_for('profile')}}"><i class="fas fa-user"></i></a>
+        <a href="{{url_for('logout')}}">Logout</a>
+    </nav>
+    <div id="menu-btn" class="fas fa-bars"></div>
+</header>
+<div class="admin-page">
+    {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}{% for cat, msg in messages %}
+    <div style="padding:12px 18px; background:rgba(0,201,167,0.1); border:1px solid rgba(0,201,167,0.25); border-radius:10px; color:#00c9a7; margin-bottom:20px; font-size:0.9rem;">{{ msg }}</div>
+    {% endfor %}{% endif %}{% endwith %}
+
+    <div class="admin-header">
+        <h1>User <span>Management</span></h1>
+        <p style="color:rgba(255,255,255,0.5); margin-top:4px; font-size:0.9rem;">{{ users|length }} total users registered</p>
+    </div>
+    <div class="admin-nav">
+        <a href="{{ url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Overview</a>
+        <a href="{{ url_for('admin_blog') }}"><i class="fas fa-newspaper"></i> Blog CMS</a>
+        <a href="{{ url_for('admin_users') }}" class="active"><i class="fas fa-users"></i> Users</a>
+    </div>
+    <div style="overflow-x:auto;">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th><th>Username</th><th>Email</th><th>Type</th><th>Specialty</th><th>Joined</th><th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td style="color:rgba(255,255,255,0.4);">{{ u.id }}</td>
+                <td style="font-weight:600; color:#fff;">{{ u.username }}
+                    {% if u.is_admin %}<span class="badge admin">Admin</span>{% endif %}
+                </td>
+                <td style="color:rgba(255,255,255,0.6);">{{ u.email }}</td>
+                <td>{% if u.type_of_doctor %}<span class="badge doc">Doctor</span>{% else %}<span class="badge pat">Patient</span>{% endif %}</td>
+                <td style="color:rgba(255,255,255,0.6);">{{ u.type_of_doctor or '—' }}</td>
+                <td style="color:rgba(255,255,255,0.45);">{{ u.created_at.strftime('%d %b %Y') if u.created_at else '—' }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('promote_admin', user_id=u.id) }}" style="display:inline;">
+                        <button type="submit" class="btn-promote">{{ 'Demote' if u.is_admin else 'Make Admin' }}</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+<script>document.getElementById('menu-btn')?.addEventListener('click',()=>document.querySelector('.navbar')?.classList.toggle('active'));</script>
+</body>
+</html>

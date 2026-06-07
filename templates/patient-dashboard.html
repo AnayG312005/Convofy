@@ -31,12 +31,12 @@
         <a href="{{url_for('index')}}" class="logo"><i class="fas fa-heartbeat"></i> Convofy</a>
         <nav class="navbar">
             {% if username %}
-            <a href="{{url_for('index')}}#home">Home</a>
-            <a href="{{url_for('index')}}#services">Services</a>
-            <a href="{{url_for('index')}}#book">Book</a>
-            <a href="{{url_for('index')}}#scans">Scans</a>
-            <a href="{{url_for('index')}}#blogs">Blogs</a>
-            <a href="{{url_for('index')}}#about">About</a>
+            <a href="{{url_for('index')}}">Home</a>
+            <a href="{{url_for('ai_chat')}}">AI Chat</a>
+            <a href="{{url_for('chat_inbox')}}">Messages{% if unread_count %} <span style="background:#00c9a7;color:#0a0b17;border-radius:50%;padding:1px 6px;font-size:0.75rem;font-weight:700;">{{unread_count}}</span>{% endif %}</a>
+            <a href="{{url_for('scan_reports')}}">Reports</a>
+            <a href="{{url_for('blog')}}">Blog</a>
+            <a href="{{url_for('book_appointment')}}">Book</a>
             <a href="{{url_for('profile')}}"><span class="fas fa-user"></span></a>
             {% else %}
             <a href="{{url_for('login')}}">Login</a>
@@ -87,64 +87,64 @@
         <h1 class="heading">Services &amp; <span>Features</span></h1>
         <div class="box-container">
             <div class="glass-box">
-                <i class="fas fa-notes-medical"></i>
+                <i class="fas fa-robot"></i>
                 <h3>24/7 AI Chat</h3>
-                <p>Get instant diagnoses and health advice from our AI assistant anytime, anywhere.</p>
-                <a href="" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                <p>Get instant health guidance, symptom assessment, and wellness advice from our AI assistant anytime.</p>
+                <a href="{{url_for('ai_chat')}}" class="btn">Chat Now <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-comments"></i>
                 <h3>Chat With Doctors</h3>
-                <p>Message our team of licensed doctors and get personalized medical advice.</p>
-                <a href="" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                <p>Message licensed doctors in real-time, share files, and get personalised medical advice securely.</p>
+                <a href="{{url_for('chat_inbox')}}" class="btn">Message <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-video"></i>
                 <h3>Video Conference</h3>
-                <p>Schedule virtual appointments and consultations with top specialist doctors.</p>
-                <a href="{{url_for('videocall')}}" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                <p>Schedule virtual appointments and face-to-face consultations with top specialist doctors.</p>
+                <a href="{{url_for('videocall')}}" class="btn">Start Call <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
-                <i class="fas fa-user-doctor"></i>
+                <i class="fas fa-calendar-check"></i>
                 <h3>Book Doctors</h3>
-                <p>Search for in-network doctors and instantly book appointments online.</p>
-                <a href="#book" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                <p>Browse in-network doctors by specialty, check availability, and instantly book appointments online.</p>
+                <a href="{{url_for('book_appointment')}}" class="btn">Book Now <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
-                <i class="fas fa-envelope"></i>
-                <h3>SMS &amp; Mail Service</h3>
-                <p>Get medication reminders, test results, and appointment alerts via SMS or email.</p>
-                <a href="" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
-            </div>
-            <div class="glass-box">
-                <i class="fas fa-heartbeat"></i>
+                <i class="fas fa-file-medical"></i>
                 <h3>Scan Reports</h3>
-                <p>Upload and store lab tests, imaging scans, and medical records securely.</p>
-                <a href="#scans" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                <p>Upload and securely store lab tests, imaging scans, X-rays, and medical documents with AI analysis.</p>
+                <a href="{{url_for('scan_reports')}}" class="btn">Upload <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
-                <i class="fas fa-plus"></i>
-                <h3>Emergency</h3>
-                <p>Get immediate emergency assistance and coordination with nearby hospitals.</p>
-                <a href="" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                <i class="fas fa-stethoscope"></i>
+                <h3>AI Disease Predict</h3>
+                <p>Select your symptoms and our machine-learning model will suggest possible conditions with confidence scores.</p>
+                <a href="{{url_for('disease_predict')}}" class="btn">Predict <span class="fas fa-chevron-right"></span></a>
+            </div>
+            <div class="glass-box">
+                <i class="fas fa-brain"></i>
+                <h3>Brain Tumor Scan</h3>
+                <p>Upload MRI scans and use AI-powered detection to identify potential brain tumor indicators.</p>
+                <a href="{{url_for('braintumor')}}" class="btn">Scan <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fa-brands fa-blogger"></i>
                 <h3>Health Blogs</h3>
-                <p>Read our regularly updated blogs with health tips and wellness advice.</p>
-                <a href="#blogs" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                <p>Read evidence-based health articles, wellness guides, and medical insights. Like, comment, and bookmark.</p>
+                <a href="{{url_for('blog')}}" class="btn">Read <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
                 <i class="fas fa-shield-halved"></i>
-                <h3>Privacy</h3>
-                <p>We take your data privacy and security extremely seriously at Convofy.</p>
+                <h3>Privacy &amp; Security</h3>
+                <p>HIPAA-inspired security, encrypted data storage, role-based access control, and full audit logging.</p>
                 <a href="{{url_for('policy')}}" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
             </div>
             <div class="glass-box">
-                <i class="fas fa-hand-holding-heart"></i>
-                <h3>Total Care</h3>
-                <p>Comprehensive care, from everyday wellness to critical emergency situations.</p>
-                <a href="" class="btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                <i class="fas fa-user-circle"></i>
+                <h3>My Profile</h3>
+                <p>View and manage your health profile, appointment history, prescriptions, and account settings.</p>
+                <a href="{{url_for('profile')}}" class="btn">Profile <span class="fas fa-chevron-right"></span></a>
             </div>
         </div>
     </section>
