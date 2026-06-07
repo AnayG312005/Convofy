@@ -10,5 +10,4 @@ python-dotenv
 reportlab
 scikit-learn
 sqlalchemy
-tensorflow
 werkzeug
