@@ -1,0 +1,42 @@
+Act as a senior Full-Stack Engineer, DevOps Engineer, and Replit deployment specialist. Your task is to completely diagnose and fix the website deployment issue. The website cannot be previewed because the deployment URL returns the error:
+
+"Server IP address could not be found"
+Error URL:
+4980364f-1738-4a23-9137-584336d38d9b-00-qenpl4k9gj41.sisko.repl.co
+
+Requirements:
+
+1. Do not ask me for screenshots. Take screenshots yourself using available browser/debugging tools and inspect the application.
+2. Identify the root cause of the DNS, deployment, networking, build, or runtime issue preventing the website from loading.
+3. Check:
+
+   * Replit deployment status
+   * .replit configuration
+   * package.json scripts
+   * environment variables
+   * server startup commands
+   * Vite/Next.js/React configuration
+   * Node.js version compatibility
+   * port binding configuration
+   * deployment logs
+   * DNS resolution issues
+   * build failures
+   * runtime crashes
+4. Fix all deployment-related issues automatically.
+5. Ensure the application binds to process.env.PORT and listens on 0.0.0.0.
+6. Verify that production build completes successfully without warnings or errors.
+7. Restart the deployment and confirm the generated deployment URL is accessible.
+8. Test every page, route, API endpoint, image, and asset for successful rendering.
+9. If any component fails to render, repair it and retest.
+10. Generate a detailed report containing:
+
+    * Root cause analysis
+    * Files modified
+    * Code changes made
+    * Deployment fixes applied
+    * Screenshots before and after the fix
+    * Final working URL
+11. Do not stop until the website loads successfully in preview and deployment mode.
+12. Preserve all existing website functionality, design, hero section, branding, and content while fixing the deployment issue.
+
+Goal: Deliver a fully functional, publicly accessible website with a working preview, successful deployment, and zero rendering errors.
